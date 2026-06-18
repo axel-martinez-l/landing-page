@@ -8,3 +8,6 @@ Store Render/
 Thumbs.db
 ~$*
 *.tmp
+
+# animation test pages (local only)
+anim-test*.html

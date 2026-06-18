@@ -985,16 +985,16 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
 
           <!-- Orange County silhouette -->
           <path d="M54,248 L63,205 L100,171 L134,122 L145,74 L245,85 L302,63 L319,40 L410,131 L489,205 L549,256 L578,268 L575,319 L558,393 L484,455 L433,561 L370,507 L319,455 L290,424 L268,404 L196,367 L171,347 L125,310 L85,273 Z"
-                fill="url(#ocLand)" stroke="#A3D65C" stroke-width="2" stroke-linejoin="round" filter="url(#ocShadow)"/>
+                class="oc-land" fill="url(#ocLand)" stroke="#A3D65C" stroke-width="2" stroke-linejoin="round" filter="url(#ocShadow)"/>
           <!-- coastline accent on the SW edge -->
           <path d="M433,561 L370,507 L319,455 L290,424 L268,404 L196,367 L171,347 L125,310 L85,273 L54,248"
-                fill="none" stroke="#FFD98A" stroke-width="2.5" stroke-opacity=".55" stroke-linecap="round" stroke-linejoin="round"/>
+                class="oc-coast" fill="none" stroke="#FFD98A" stroke-width="2.5" stroke-opacity=".55" stroke-linecap="round" stroke-linejoin="round"/>
 
           <!-- ~20-mile fresh-delivery radius around Crystal Cove -->
-          <circle cx="272" cy="402" r="150" fill="rgba(245,166,35,.05)" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="5 8" stroke-opacity=".7"/>
+          <circle class="oc-radius" cx="272" cy="402" r="150" fill="rgba(245,166,35,.05)" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="5 8" stroke-opacity=".7"/>
 
           <!-- city markers -->
-          <g font-family="'Poppins',sans-serif" font-size="13.5" fill="#F4FAEF"
+          <g class="oc-pins" font-family="'Poppins',sans-serif" font-size="13.5" fill="#F4FAEF"
              style="paint-order:stroke;stroke:#0A2A16;stroke-width:3.5px;stroke-linejoin:round">
             <circle cx="302" cy="295" r="6" fill="#8DC63F" stroke="#fff" stroke-width="1.6"/>
             <text x="314" y="300">Irvine</text>
@@ -1101,5 +1101,89 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 <!-- Lucide line icons -->
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>window.lucide&&lucide.createIcons();</script>
+<!-- anime.js entrance animations -->
+<script src="assets/anime.umd.min.js"></script>
+<script>
+(function(){
+  if(!window.anime) return;
+  var A=window.anime, utils=A.utils, stagger=A.stagger, createTimeline=A.createTimeline, svg=A.svg;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function onView(el,cb,th){ new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){cb();o.disconnect();}});},{threshold:th||.25}).observe(el); }
+
+  /* hero headline - word by word */
+  (function(){
+    var h1=document.querySelector('.hero-content h1'); if(!h1) return;
+    if(reduce) return;
+    var words=[];
+    function wrapText(node){ var parts=node.textContent.split(/(\s+)/), frag=document.createDocumentFragment();
+      parts.forEach(function(p){ if(p==='')return; if(/^\s+$/.test(p)){frag.appendChild(document.createTextNode(p));} else {var s=document.createElement('span'); s.className='w'; s.textContent=p; frag.appendChild(s); words.push(s);} });
+      node.parentNode.replaceChild(frag,node); }
+    Array.prototype.slice.call(h1.childNodes).forEach(function(n){ if(n.nodeType===3){wrapText(n);} else if(n.nodeType===1&&n.tagName!=='BR'){n.classList.add('w'); words.push(n);} });
+    words.forEach(function(w){ w.style.display='inline-block'; });
+    utils.set(words,{opacity:0,translateY:20});
+    var others=[]; ['.hero-content .hero-pill','.hero-content p.lead','.hero-content .hero-cta','.hero-content .hero-tags'].forEach(function(s){var e=document.querySelector(s); if(e)others.push(e);});
+    utils.set(others,{opacity:0,translateY:16});
+    createTimeline({defaults:{ease:'out(3)'}})
+      .add(words,{opacity:1,translateY:0,duration:1150,delay:stagger(150)},250)
+      .add(others,{opacity:1,translateY:0,duration:900,delay:stagger(150)},1400);
+  })();
+
+  /* markup chain */
+  (function(){
+    var sec=document.querySelector('.markup'); if(!sec) return;
+    sec.classList.remove('reveal'); sec.style.opacity='1'; if(reduce) return;
+    var prices=Array.prototype.slice.call(document.querySelectorAll('.markup .mk-price'));
+    prices.forEach(function(el){ el._t=parseFloat(el.textContent.replace(/[^0-9.]/g,''))||0; el.textContent='$0.00'; });
+    utils.set('.markup .mk-node',{opacity:0,translateY:28,scale:.8});
+    utils.set('.markup .mk-link',{opacity:0});
+    utils.set('.markup .ms-card',{opacity:0,translateY:18});
+    utils.set('.markup .ms-card.lf',{scale:.86});
+    utils.set('.markup .ms-mid',{opacity:0,scale:.6});
+    utils.set('.markup .ms-badge',{scale:0});
+    utils.set('.markup .markup-foot',{opacity:0,translateY:12});
+    var counter={v:0};
+    var tl=createTimeline({defaults:{ease:'out(3)',duration:650},autoplay:false})
+      .add('.markup .mk-node',{opacity:1,translateY:0,scale:1,delay:stagger(150)},0)
+      .add('.markup .mk-link',{opacity:1,duration:350,delay:stagger(150)},150)
+      .add(counter,{v:1,duration:2200,ease:'out(3)',onUpdate:function(){prices.forEach(function(el){el.textContent='$'+(el._t*counter.v).toFixed(2);});}},300)
+      .add('.markup .ms-card.today',{opacity:1,translateY:0},2350)
+      .add('.markup .ms-mid',{opacity:1,scale:1},2550)
+      .add('.markup .ms-card.lf',{opacity:1,translateY:0,scale:1,duration:800,ease:'out(4)'},2650)
+      .add('.markup .markup-foot',{opacity:1,translateY:0},3000)
+      .add('.markup .ms-badge',{scale:1,duration:600,ease:'out(5)'},3050);
+    onView(sec,function(){tl.play();},.25);
+  })();
+
+  /* journey line + steps */
+  (function(){
+    var jt=document.querySelector('.journey-track'); if(!jt) return;
+    jt.classList.remove('reveal'); jt.style.opacity='1'; if(reduce) return;
+    utils.set('.journey-line',{scaleX:0,transformOrigin:'left center'});
+    utils.set('.journey-track .jstep',{opacity:0,translateY:24,scale:.92});
+    var jtl=createTimeline({defaults:{ease:'out(3)'},autoplay:false})
+      .add('.journey-line',{scaleX:1,duration:1100,ease:'inOut(3)'},0)
+      .add('.journey-track .jstep',{opacity:1,translateY:0,scale:1,duration:650,delay:stagger(170)},250);
+    onView(jt,function(){jtl.play();},.3);
+  })();
+
+  /* OC map draw-on */
+  (function(){
+    var lm=document.querySelector('.loc-map'); if(!lm) return;
+    lm.classList.remove('reveal'); lm.style.opacity='1'; if(reduce) return;
+    var land=svg.createDrawable('.loc-map .oc-land');
+    var coast=svg.createDrawable('.loc-map .oc-coast');
+    utils.set('.loc-map .oc-land',{fillOpacity:0});
+    utils.set('.loc-map .oc-pins circle',{opacity:0,translateY:-10});
+    utils.set('.loc-map .oc-radius',{opacity:0});
+    var mtl=createTimeline({defaults:{ease:'out(3)'},autoplay:false})
+      .add(land,{draw:['0 0','0 1'],duration:1500,ease:'inOut(3)'},0)
+      .add('.loc-map .oc-land',{fillOpacity:[0,1],duration:1000},350)
+      .add(coast,{draw:['0 0','0 1'],duration:1000},700)
+      .add('.loc-map .oc-radius',{opacity:[0,.7],duration:700},1150)
+      .add('.loc-map .oc-pins circle',{opacity:1,translateY:0,duration:550,ease:'out(4)',delay:stagger(110)},1250);
+    onView(lm,function(){mtl.play();},.3);
+  })();
+})();
+</script>
 </body>
 </html>
