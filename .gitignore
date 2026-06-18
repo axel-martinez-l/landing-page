@@ -1,0 +1,10 @@
+# Heavy source files NOT needed for the live site (keep the repo light)
+LF Video Website.mp4
+LF Video Website*.jpg
+Store Render/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+~$*
+*.tmp

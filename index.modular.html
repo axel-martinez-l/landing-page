@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LiveFresh — Freshness that everyone can afford</title>
+<meta name="description" content="LiveFresh brings produce straight from the farm to your door and to our stores. No freezers, no middlemen — just fresh." />
+<link rel="icon" type="image/png" href="assets/icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{
+  /* Brand palette pulled from LiveFresh logo + deck */
+  --forest:#0E3A1F;
+  --forest-deep:#0A2A16;
+  --forest-2:#1B3829;
+  --green:#3C9A3D;
+  --lime:#8DC63F;
+  --lime-soft:#A3D65C;
+  --cream:#F4FAEF;
+  --cream-2:#EAF4D8;
+  --gold:#F5A623;
+  --gold-bright:#FFC233;
+  --tomato:#E94F37;
+  --ink:#13241a;
+  --muted:#5d6b60;
+  --white:#ffffff;
+  --shadow:0 20px 50px -20px rgba(14,58,31,.45);
+  --radius:22px;
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Poppins',system-ui,sans-serif;
+  color:var(--ink);
+  background:var(--cream);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+h1,h2,h3{font-family:'Fraunces',Georgia,serif;line-height:1.08;letter-spacing:-.01em}
+.script{font-family:'Pacifico',cursive;font-weight:400}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.74rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--green);background:var(--cream-2);
+  padding:8px 16px;border-radius:100px;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-weight:600;font-size:1rem;cursor:pointer;border:none;
+  padding:15px 28px;border-radius:100px;transition:.25s ease;
+}
+.btn-gold{background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:var(--forest-deep);box-shadow:0 12px 28px -10px rgba(245,166,35,.7)}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 18px 36px -10px rgba(245,166,35,.85)}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.35);backdrop-filter:blur(6px)}
+.btn-ghost:hover{background:rgba(255,255,255,.22)}
+.btn-green{background:var(--forest);color:#fff}
+.btn-green:hover{background:var(--green);transform:translateY(-3px)}
+
+/* ---------- NAV ---------- */
+header.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  transition:.3s ease;
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:var(--maxw);margin:46px auto;padding:0 16px;height:54px;overflow:visible;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.6);
+  border-radius:100px;box-shadow:0 10px 30px -16px rgba(14,58,31,.4);
+  transition:.3s ease;
+}
+.nav-scrolled .nav-inner{background:rgba(255,255,255,.92);box-shadow:0 12px 34px -16px rgba(14,58,31,.55)}
+.nav-logo{display:flex;align-items:center;gap:10px;position:relative;z-index:2}
+.nav-logo img{height:170px;width:auto;display:block;filter:drop-shadow(0 6px 16px rgba(10,42,22,.4))}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-weight:500;font-size:.95rem;color:var(--forest-2);position:relative;padding:4px 0}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;background:var(--lime);transition:.25s}
+.nav-links a:hover::after{width:100%}
+.nav-cta{padding:11px 22px;font-size:.92rem}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:8px}
+.burger span{width:24px;height:2.5px;background:var(--forest);border-radius:2px;transition:.25s}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;
+  background:
+    radial-gradient(120% 90% at 80% -10%, rgba(141,198,63,.32), transparent 55%),
+    radial-gradient(90% 80% at 0% 110%, rgba(245,166,35,.2), transparent 50%),
+    linear-gradient(160deg,var(--forest) 0%,var(--forest-deep) 75%);
+  color:#fff;overflow:hidden;padding:150px 0 116px;
+}
+.hero-videowrap{width:100%;line-height:0;margin-bottom:48px;background:#0A2A16;box-shadow:0 28px 70px -34px rgba(0,0,0,.7)}
+.hero-video{display:block;width:100%;height:auto}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:900px;margin:0 auto}
+.hero-content .hero-cta,.hero-content .hero-tags{justify-content:center}
+.hero-content .lead{margin-left:auto;margin-right:auto}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:9px;font-size:.82rem;font-weight:600;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+  padding:8px 16px;border-radius:100px;margin-bottom:24px;backdrop-filter:blur(6px);
+}
+.hero-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 0 rgba(141,198,63,.7);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(141,198,63,.6)}70%{box-shadow:0 0 0 12px rgba(141,198,63,0)}100%{box-shadow:0 0 0 0 rgba(141,198,63,0)}}
+.hero h1{font-size:clamp(2.6rem,6vw,4.6rem);font-weight:600;margin-bottom:22px}
+.hero h1 .accent{color:var(--gold-bright)}
+.hero h1 .scriptword{color:var(--lime-soft);display:inline-block}
+.hero p.lead{font-size:1.18rem;color:rgba(255,255,255,.85);max-width:520px;margin-bottom:34px;font-weight:300}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+.hero-tags{display:flex;gap:22px;flex-wrap:wrap;font-size:.9rem;color:rgba(255,255,255,.8)}
+.hero-tags span{display:flex;align-items:center;gap:8px}
+.hero-tags svg{width:18px;height:18px;color:var(--lime)}
+
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.hero-wave{position:absolute;bottom:-1px;left:0;width:100%;z-index:2;line-height:0}
+.hero-wave svg{width:100%;height:90px;display:block}
+
+/* ---------- MARQUEE ---------- */
+.marquee{background:var(--gold);overflow:hidden;padding:14px 0;white-space:nowrap}
+.marquee-track{display:inline-block;animation:scrollx 26s linear infinite}
+.marquee-track span{font-family:'Fraunces',serif;font-weight:600;font-size:1.1rem;color:var(--forest-deep);margin:0 28px}
+.marquee-track span::after{content:"•";margin-left:28px;color:var(--forest)}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+
+/* ---------- SECTION base ---------- */
+section{position:relative}
+.section-pad{padding:100px 0}
+.section-head{text-align:center;max-width:720px;margin:0 auto 60px}
+.section-head h2{font-size:clamp(2rem,4.2vw,3.1rem);font-weight:600;margin:18px 0 16px;color:var(--forest)}
+.section-head p{color:var(--muted);font-size:1.1rem}
+
+/* ---------- JOURNEY (farm to customer) ---------- */
+.journey{background:var(--white)}
+.journey-track{
+  position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px;
+}
+.journey-line{
+  position:absolute;top:54px;left:7%;right:7%;height:4px;border-radius:4px;
+  background:linear-gradient(90deg,var(--lime),var(--green),var(--gold),var(--tomato));
+  z-index:0;
+}
+.journey-line::after{
+  content:"";position:absolute;top:-5px;left:0;width:14px;height:14px;border-radius:50%;
+  background:#fff;border:4px solid var(--green);box-shadow:0 0 0 4px rgba(60,154,61,.2);
+  animation:travel 6s ease-in-out infinite;
+}
+@keyframes travel{0%{left:0%}25%{left:33%}50%{left:66%}75%{left:99%}100%{left:0%}}
+.jstep{position:relative;z-index:1;text-align:center;padding:0 6px}
+.jbubble{
+  width:108px;height:108px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;
+  background:#fff;border:3px solid var(--cream-2);box-shadow:var(--shadow);font-size:2.6rem;
+  transition:.3s;position:relative;
+}
+.jstep:hover .jbubble{transform:translateY(-8px) scale(1.05);border-color:var(--lime)}
+.jbubble .num{position:absolute;top:-8px;right:-6px;width:30px;height:30px;border-radius:50%;
+  background:var(--forest);color:#fff;font-family:'Poppins';font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.jstep h3{font-size:1.18rem;color:var(--forest);margin-bottom:8px;font-weight:600}
+.jstep p{font-size:.92rem;color:var(--muted)}
+.no-middle{
+  text-align:center;margin-top:54px;
+}
+.no-middle .strike{
+  display:inline-block;position:relative;font-family:'Fraunces',serif;font-size:1.5rem;color:var(--muted);font-weight:600;
+}
+.no-middle .strike::before{content:"";position:absolute;top:52%;left:-6px;right:-6px;height:3px;background:var(--tomato);transform:rotate(-3deg)}
+.no-middle .yay{display:block;margin-top:10px;font-family:'Fraunces',serif;font-size:1.8rem;color:var(--forest);font-weight:700}
+
+/* ---------- PROCESS ---------- */
+.process{background:linear-gradient(180deg,var(--cream),#fff)}
+.proc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+.proc-card{
+  background:#fff;border-radius:var(--radius);padding:34px;box-shadow:0 18px 44px -28px rgba(14,58,31,.4);
+  border:1px solid #eef3e9;position:relative;overflow:hidden;transition:.3s;
+}
+.proc-card:hover{transform:translateY(-6px);box-shadow:0 28px 56px -28px rgba(14,58,31,.5)}
+.proc-card::before{content:"";position:absolute;top:0;left:0;width:6px;height:100%;background:var(--lime)}
+.proc-card .pnum{font-family:'Fraunces',serif;font-size:3rem;font-weight:700;color:var(--cream-2);line-height:1;position:absolute;top:18px;right:26px}
+.proc-card .picon{font-size:2.2rem;margin-bottom:16px}
+.proc-card h3{font-size:1.35rem;color:var(--forest);margin-bottom:10px;font-weight:600}
+.proc-card p{color:var(--muted);font-size:.98rem}
+
+/* ---------- AUDIENCE toggle ---------- */
+.audience{background:var(--forest);color:#fff;overflow:hidden}
+.aud-toggle{display:flex;gap:6px;background:rgba(255,255,255,.1);padding:6px;border-radius:100px;width:max-content;margin:0 auto 44px;border:1px solid rgba(255,255,255,.18)}
+.aud-toggle button{
+  border:none;background:transparent;color:rgba(255,255,255,.7);font-weight:600;font-size:1rem;
+  padding:12px 34px;border-radius:100px;cursor:pointer;transition:.25s;font-family:'Poppins'
+}
+.aud-toggle button.active{background:var(--gold-bright);color:var(--forest-deep)}
+.aud-panel{display:none;animation:fade .4s ease}
+.aud-panel.active{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.aud-item{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:28px;transition:.25s}
+.aud-item:hover{background:rgba(255,255,255,.12);transform:translateY(-5px)}
+.aud-item .ai{font-size:2rem;margin-bottom:14px}
+.aud-item h4{font-family:'Fraunces',serif;font-size:1.2rem;margin-bottom:8px;color:var(--lime-soft)}
+.aud-item p{color:rgba(255,255,255,.78);font-size:.94rem}
+
+/* ---------- STORES (renders) ---------- */
+.stores{background:#fff}
+.store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.store-card{
+  border-radius:var(--radius);overflow:hidden;background:var(--cream);
+  box-shadow:0 18px 44px -26px rgba(14,58,31,.45);border:1px solid #eef3e9;transition:.35s;
+}
+.store-card:hover{transform:translateY(-8px);box-shadow:0 30px 60px -26px rgba(14,58,31,.55)}
+.store-render{position:relative;height:220px;overflow:hidden}
+.store-render svg{width:100%;height:100%;display:block}
+.store-tag{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.92);color:var(--forest);
+  font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:100px}
+.store-body{padding:24px}
+.store-body h3{font-size:1.3rem;color:var(--forest);margin-bottom:8px;font-weight:600}
+.store-body p{color:var(--muted);font-size:.94rem;margin-bottom:14px}
+.store-feat{display:flex;flex-wrap:wrap;gap:8px}
+.store-feat span{font-size:.78rem;background:var(--cream-2);color:var(--forest-2);padding:5px 12px;border-radius:100px;font-weight:500}
+.render-note{text-align:center;color:var(--muted);font-size:.85rem;margin-top:26px;font-style:italic}
+
+/* about our stores */
+.about-stores{background:linear-gradient(180deg,#fff,var(--cream))}
+.about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:10px}
+.about-card{text-align:center;padding:34px 26px;background:#fff;border-radius:var(--radius);border:1px solid #eef3e9;box-shadow:0 14px 36px -28px rgba(14,58,31,.4)}
+.about-card .big{width:70px;height:70px;border-radius:20px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--cream-2)}
+.about-card h3{font-size:1.25rem;color:var(--forest);margin-bottom:10px;font-weight:600}
+.about-card p{color:var(--muted);font-size:.95rem}
+
+/* ---------- LOCATIONS ---------- */
+.locations{background:var(--forest-deep);color:#fff}
+.loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.loc-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.loc-list li{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  padding:16px 20px;border-radius:14px;font-weight:500;transition:.25s}
+.loc-list li:hover{background:rgba(255,255,255,.12)}
+.loc-list li .pin{font-size:1.3rem}
+.loc-list li.prio{background:linear-gradient(135deg,rgba(245,166,35,.22),rgba(141,198,63,.12));border-color:rgba(245,166,35,.4)}
+.loc-list li .badge{margin-left:auto;font-size:.7rem;font-weight:700;background:var(--gold-bright);color:var(--forest-deep);padding:4px 10px;border-radius:100px;letter-spacing:.05em}
+.loc-map{position:relative}
+.loc-map svg{width:100%;height:auto;filter:drop-shadow(0 20px 40px rgba(0,0,0,.4))}
+.loc-radius{font-size:.9rem;color:rgba(255,255,255,.7);margin-top:18px;text-align:center}
+
+/* ---------- CTA ---------- */
+.cta{background:linear-gradient(135deg,var(--lime),var(--green));text-align:center;color:var(--forest-deep)}
+.cta h2{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:700;margin-bottom:16px;color:var(--forest-deep)}
+.cta p{font-size:1.15rem;margin-bottom:30px;color:var(--forest-2)}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--forest-deep);color:rgba(255,255,255,.7);padding:60px 0 30px}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px;margin-bottom:40px}
+footer img{height:54px;margin-bottom:16px}
+footer h5{color:#fff;font-size:.95rem;margin-bottom:14px;font-weight:600;letter-spacing:.04em}
+footer ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+footer ul a{font-size:.9rem;transition:.2s}
+footer ul a:hover{color:var(--lime-soft)}
+footer .tag{font-family:'Fraunces',Georgia,serif;font-style:italic;color:var(--lime-soft);font-size:1.1rem;margin-top:4px}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.12);padding-top:24px;text-align:center;font-size:.82rem}
+
+/* ---------- BUY: two ways to get fresh ---------- */
+.buy{background:#fff}
+.buy-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.buy-card{position:relative;border-radius:var(--radius);padding:42px;overflow:hidden;border:1px solid #eef3e9;transition:.32s;display:flex;flex-direction:column}
+.buy-card:hover{transform:translateY(-7px);box-shadow:var(--shadow)}
+.buy-card.online{background:linear-gradient(155deg,var(--forest),var(--forest-deep));color:#fff}
+.buy-card.instore{background:linear-gradient(155deg,var(--cream-2),#fff)}
+.buy-badge{align-self:flex-start;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;border-radius:100px;margin-bottom:18px}
+.buy-card.online .buy-badge{background:rgba(255,255,255,.14);color:var(--lime-soft)}
+.buy-card.instore .buy-badge{background:var(--green);color:#fff}
+.buy-icon{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:18px}
+.buy-card.online .buy-icon{background:rgba(255,255,255,.12)}
+.buy-card.instore .buy-icon{background:#fff;box-shadow:0 10px 24px -14px rgba(14,58,31,.4)}
+.buy-card h3{font-size:1.7rem;margin-bottom:12px;font-weight:600}
+.buy-card.online h3{color:#fff}.buy-card.instore h3{color:var(--forest)}
+.buy-card .blurb{margin-bottom:22px;font-size:1.02rem}
+.buy-card.online .blurb{color:rgba(255,255,255,.85)}.buy-card.instore .blurb{color:var(--muted)}
+.buy-list{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:28px}
+.buy-list li{display:flex;align-items:flex-start;gap:11px;font-size:.96rem}
+.buy-card.online .buy-list li{color:rgba(255,255,255,.92)}.buy-card.instore .buy-list li{color:var(--ink)}
+.buy-list li::before{content:"✓";font-weight:800;color:var(--lime);flex:0 0 auto}
+.buy-card.instore .buy-list li::before{color:var(--green)}
+.buy-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.buy-chips span{font-size:.76rem;font-weight:600;padding:6px 13px;border-radius:100px}
+.buy-card.online .buy-chips span{background:rgba(255,255,255,.12);color:#fff}
+.buy-card.instore .buy-chips span{background:#fff;color:var(--forest-2);border:1px solid var(--cream-2)}
+.buy-card .btn{margin-top:auto;align-self:flex-start}
+
+/* ---------- IN-STORE GALLERY / CAROUSEL ---------- */
+.instore-gallery{display:none}
+#buy.viewing-store .buy-grid{display:none}
+#buy.viewing-store .instore-gallery{display:block;animation:fade .5s ease}
+.ig-head{display:flex;align-items:center;gap:18px;margin-bottom:18px;flex-wrap:wrap}
+.ig-back{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--cream-2);background:#fff;color:var(--forest);
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.92rem;padding:10px 18px;border-radius:100px;cursor:pointer;transition:.2s}
+.ig-back:hover{background:var(--cream-2)}
+.ig-back svg{width:16px;height:16px}
+.ig-title{font-family:'Fraunces',serif;font-size:1.35rem;color:var(--forest);font-weight:600}
+.ig-carousel{position:relative;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:#0A2A16}
+.ig-track{display:flex;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.ig-slide{flex:0 0 100%;position:relative;margin:0}
+.ig-slide img{width:100%;height:540px;object-fit:cover;display:block}
+.ig-slide figcaption{position:absolute;left:0;right:0;bottom:0;padding:54px 30px 24px;color:#fff;font-size:1rem;
+  background:linear-gradient(transparent,rgba(10,42,22,.55) 35%,rgba(10,42,22,.92))}
+.ig-slide figcaption strong{font-family:'Fraunces',serif;font-weight:600;font-size:1.25rem;display:block;margin-bottom:5px;color:var(--lime-soft)}
+.ig-arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:0;
+  background:rgba(255,255,255,.92);color:var(--forest);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 22px -8px rgba(0,0,0,.5);transition:.2s;z-index:2}
+.ig-arrow:hover{background:#fff;transform:translateY(-50%) scale(1.08)}
+.ig-arrow svg{width:24px;height:24px}
+.ig-prev{left:18px}.ig-next{right:18px}
+.ig-dots{display:flex;justify-content:center;gap:9px;margin-top:20px}
+.ig-dots button{width:9px;height:9px;border-radius:50%;border:0;background:var(--cream-2);cursor:pointer;padding:0;transition:.25s}
+.ig-dots button.active{background:var(--green);width:28px;border-radius:100px}
+
+/* ---------- LIVE MAP (native) ---------- */
+.livemap{background:linear-gradient(180deg,#fff,var(--cream))}
+.lfmap-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid #e7e2d5}
+.lfmap-top{position:relative;z-index:30;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--forest);flex-wrap:wrap}
+.lf-search{position:relative;flex:1 1 280px;min-width:220px}
+.lf-search-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+.lf-search input{width:100%;padding:13px 40px 13px 42px;border-radius:100px;border:0;font-family:'Poppins';font-size:.95rem;color:var(--ink);outline:none}
+.lf-search #lf-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:26px;height:26px;border:0;border-radius:50%;background:var(--cream-2);color:var(--forest);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lf-locate{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);color:#fff;font-family:'Poppins',sans-serif;font-weight:600;font-size:.84rem;padding:11px 16px;border-radius:100px;cursor:pointer;white-space:nowrap;transition:.2s}
+.lf-locate:hover{background:rgba(255,255,255,.22)}
+.lf-locate svg{width:16px;height:16px}
+.lf-locate.busy{opacity:.7;pointer-events:none}
+.lf-suggest{position:fixed;background:#fff;border-radius:14px;box-shadow:0 24px 50px -16px rgba(0,0,0,.45);overflow-y:auto;display:none;z-index:9999;max-height:300px}
+.lf-suggest.open{display:block}
+.lf-sg{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 16px;border:0;background:#fff;cursor:pointer;border-bottom:1px solid var(--cream-2);font-family:'Poppins'}
+.lf-sg:hover{background:var(--cream-2)}
+.lf-sg-label{font-weight:600;color:var(--ink);font-size:.92rem}
+.lf-sg-sub{color:var(--muted);font-size:.8rem}
+.lf-channels{display:flex;gap:5px;background:rgba(255,255,255,.12);padding:5px;border-radius:100px}
+.lf-channels button{border:0;background:transparent;color:rgba(255,255,255,.8);font-family:'Poppins';font-weight:600;font-size:.84rem;padding:9px 16px;border-radius:100px;cursor:pointer;transition:.2s;white-space:nowrap}
+.lf-channels button.active{background:var(--gold-bright);color:var(--forest-deep)}
+.lfmap-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.25fr 1fr;gap:0}
+.lfmap-left{position:relative;z-index:1}
+#lf-map{height:520px;width:100%;background:#e8eee3}
+.lf-nomap{height:100%;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);padding:30px;font-size:.95rem;line-height:1.7}
+.leaflet-container{font-family:'Poppins',sans-serif}
+.lf-legend{position:absolute;left:14px;bottom:14px;z-index:500;background:rgba(255,255,255,.94);backdrop-filter:blur(6px);border-radius:12px;padding:10px 13px;display:flex;flex-direction:column;gap:6px;font-size:.74rem;color:var(--ink);box-shadow:0 8px 22px -12px rgba(14,58,31,.5)}
+.lf-legend span{display:flex;align-items:center;gap:7px}
+.lf-dot{width:10px;height:10px;border-radius:50%;display:inline-block;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.1)}
+.lf-ring{width:12px;height:12px;border-radius:50%;border:1.5px dashed var(--gold);display:inline-block}
+.lfmap-right{padding:22px;display:flex;flex-direction:column;border-left:1px solid var(--cream-2)}
+.lf-status{font-size:.86rem;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.lf-status b{color:var(--forest)}
+.lf-cats{display:flex;gap:6px;margin-bottom:16px}
+.lf-cats button{flex:1;border:1px solid var(--cream-2);background:#fff;color:var(--muted);font-family:'Poppins';font-weight:600;font-size:.85rem;padding:9px;border-radius:10px;cursor:pointer;transition:.2s}
+.lf-cats button.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.lf-products{display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:400px;padding-right:4px}
+.lf-prod{border:1px solid var(--cream-2);border-radius:12px;padding:13px 15px;transition:.2s}
+.lf-prod:hover{border-color:var(--lime);box-shadow:0 8px 20px -14px rgba(14,58,31,.5)}
+.lf-prod-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lf-prod-name{font-weight:600;color:var(--ink);font-size:.95rem}
+.lf-prod-deal{background:var(--tomato);color:#fff;font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:100px}
+.lf-prod-sub{color:var(--muted);font-size:.8rem;margin:3px 0 9px}
+.lf-prod-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lf-prod-price{font-family:'Poppins',sans-serif;font-weight:700;color:var(--green);font-size:1.12rem;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.lf-prod-orig{color:var(--muted);font-size:.8rem;text-decoration:line-through;font-family:'Poppins';font-weight:400;margin-left:5px}
+.lf-prod-hub{font-size:.74rem;color:var(--forest-2);background:var(--cream-2);padding:4px 9px;border-radius:100px;font-weight:500;white-space:nowrap}
+.lf-empty{color:var(--muted);font-size:.9rem;text-align:center;padding:28px 14px;line-height:1.6}
+/* product detail: rating, freshness pill, price change */
+.lf-rate{display:inline-flex;align-items:center;gap:3px;border:0;background:none;cursor:pointer;padding:0;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:700;color:#9a6b12}
+.lf-rate svg{width:12px;height:12px;color:#F5A623}
+.lf-rate .c{color:var(--muted);font-weight:500}
+.lf-fresh{display:inline-flex;align-items:center;gap:6px;margin:8px 0 4px;border:0;cursor:pointer;border-radius:100px;
+  font-family:'Poppins',sans-serif;font-size:.76rem;font-weight:600;padding:5px 11px;transition:.18s}
+.lf-fresh svg{width:13px;height:13px;flex:0 0 auto}
+.lf-fresh:hover{filter:brightness(.96)}
+.lf-fresh .from{font-weight:500;opacity:.85}
+.lf-fresh.just-in,.lf-fresh.fresh{background:#e7f4de;color:#2f7d3f}
+.lf-fresh.good{background:#fbeecb;color:#9a6b12}
+.lf-fresh.stored{background:#eceeea;color:#5d6b60}
+.lf-change{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:100px;white-space:nowrap}
+.lf-change.down{background:#e7f4de;color:#2f7d3f}
+.lf-change.up{background:#fde4df;color:#c0392b}
+.lf-change.flat{background:var(--cream-2);color:var(--muted)}
+.lf-pricegrp{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* detail popover (harvest timeline + reviews) */
+.lf-pop-overlay{position:fixed;inset:0;background:rgba(10,42,22,.35);z-index:1400;display:none}
+.lf-pop-overlay.open{display:block}
+.lf-pop{position:fixed;z-index:1500;width:340px;max-width:calc(100vw - 28px);max-height:80vh;overflow-y:auto;
+  background:#fff;border-radius:18px;box-shadow:0 34px 80px -20px rgba(0,0,0,.55);padding:20px 22px;display:none}
+.lf-pop.open{display:block;animation:fade .22s ease}
+.lf-pop-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.lf-pop-title{font-family:'Fraunces',serif;font-weight:600;font-size:1.25rem;color:var(--forest);line-height:1.15}
+.lf-pop-close{border:0;background:var(--cream-2);color:var(--forest);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:1.05rem;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.lf-pop-tier{display:inline-block;margin:12px 0 16px;font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:100px}
+.lf-pop-tier.just-in,.lf-pop-tier.fresh{background:#e7f4de;color:#2f7d3f}
+.lf-pop-tier.good{background:#fbeecb;color:#9a6b12}
+.lf-pop-tier.stored{background:#eceeea;color:#5d6b60}
+.lf-timeline{margin:4px 0 6px}
+.lf-step{position:relative;padding:0 0 18px 22px;border-left:2px solid var(--cream-2)}
+.lf-step:last-child{border-left-color:transparent;padding-bottom:4px}
+.lf-step::before{content:"";position:absolute;left:-7px;top:2px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid #fff;box-shadow:0 0 0 1px var(--cream-2)}
+.lf-step.current::before{background:var(--gold)}
+.lf-step-when{font-weight:700;font-size:.8rem;color:var(--forest)}
+.lf-step-where{font-size:.86rem;color:var(--ink);margin:1px 0}
+.lf-step-detail{font-size:.78rem;color:var(--muted)}
+.lf-pop-rev{border-top:1px solid var(--cream-2);margin-top:8px;padding-top:14px}
+.lf-pop-rev-head{display:flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem;color:var(--forest);margin-bottom:10px}
+.lf-pop-rev-head svg{width:14px;height:14px;color:#F5A623}
+.lf-pop-rev-head .c{color:var(--muted);font-weight:500;font-size:.82rem}
+.lf-pop-rev-item{font-size:.83rem;color:var(--ink);margin-bottom:8px;line-height:1.45}
+.lf-pop-rev-item span{color:var(--muted)}
+.lf-pop-foot{margin-top:12px;font-size:.78rem;color:var(--muted);background:var(--cream);border-radius:12px;padding:11px 13px;line-height:1.5}
+.lf-pop-foot b{color:var(--forest)}
+.lf-hubs{padding:18px 22px 24px;border-top:1px solid var(--cream-2);background:var(--cream)}
+.lf-hubs-title{font-weight:700;color:var(--forest);font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px}
+.lf-hubs-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.lf-hub{background:#fff;border-radius:12px;padding:13px;border:1px solid var(--cream-2);border-top:3px solid var(--green)}
+.lf-hub.hub{border-top-color:var(--gold)}
+.lf-hub-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.lf-hub-ic{font-size:1.1rem}
+.lf-hub-dist{font-size:.74rem;font-weight:700;color:var(--muted)}
+.lf-hub-name{font-weight:600;color:var(--ink);font-size:.84rem;line-height:1.3;margin-bottom:5px;min-height:2.2em}
+.lf-hub-tag{font-size:.7rem;color:var(--muted)}
+.map-hint{text-align:center;color:var(--muted);font-size:.9rem;margin-top:18px}
+.map-hint a{color:var(--green);font-weight:600;text-decoration:underline}
+
+/* ---------- ICONS (Lucide line icons) ---------- */
+svg.lucide{stroke-width:1.9;flex:0 0 auto}
+.eyebrow svg.lucide{width:15px;height:15px;stroke-width:2.2}
+.jbubble svg.lucide{width:46px;height:46px;color:var(--green);stroke-width:1.6}
+.picon svg.lucide{width:34px;height:34px;color:var(--green)}
+.buy-icon svg.lucide{width:30px;height:30px}
+.buy-card.online .buy-icon svg.lucide{color:var(--lime-soft)}
+.buy-card.instore .buy-icon svg.lucide{color:var(--green)}
+.buy-chips span{display:inline-flex;align-items:center;gap:6px}
+.buy-chips span svg.lucide{width:15px;height:15px}
+.aud-toggle button{display:inline-flex;align-items:center;gap:8px}
+.aud-toggle button svg.lucide{width:17px;height:17px}
+.aud-item .ai svg.lucide{width:30px;height:30px;color:var(--lime-soft)}
+.about-card .big svg.lucide{width:32px;height:32px;color:var(--green)}
+.lf-channels button{display:inline-flex;align-items:center;gap:7px}
+.lf-channels button svg.lucide{width:15px;height:15px}
+.loc-list .pin{display:inline-flex;align-items:center}
+.loc-list .pin svg.lucide{width:18px;height:18px;color:var(--lime-soft)}
+.loc-list li.prio .pin svg.lucide{color:var(--gold-bright)}
+.loc-radius{display:flex;align-items:center;justify-content:center;gap:7px}
+.loc-radius svg.lucide{width:16px;height:16px}
+
+/* reveal animation */
+.reveal{opacity:0;transform:translateY(36px);transition:.7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:920px){
+  .hero-grid{grid-template-columns:1fr;text-align:center}
+  .hero p.lead{margin-left:auto;margin-right:auto}
+  .hero-cta,.hero-tags{justify-content:center}
+  .hero-visual{height:360px;margin-top:20px}
+  .disc{width:300px;height:300px}.disc-ring{width:350px;height:350px}
+  .proc-grid,.aud-panel.active,.store-grid,.about-grid,.loc-grid,.buy-grid{grid-template-columns:1fr!important}
+  .lfmap-grid{grid-template-columns:1fr}
+  .lfmap-right{border-left:0;border-top:1px solid var(--cream-2)}
+  #lf-map{height:380px}
+  .lf-hubs-row{grid-template-columns:1fr 1fr 1fr}
+  .journey-track{grid-template-columns:1fr 1fr;gap:30px}
+  .journey-line{display:none}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
+  .nav-links{display:none}
+  .burger{display:flex}
+  .nav-links.open{display:flex;position:absolute;top:96px;left:18px;right:18px;flex-direction:column;
+    background:#fff;padding:22px;border-radius:20px;box-shadow:var(--shadow);gap:16px}
+  .nav-inner{margin:20px auto;height:48px}
+  .nav-logo img{height:84px}
+  .hero{padding-top:118px}
+  .journey-track{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr}
+  .lf-hubs-row{grid-template-columns:1fr 1fr}
+  .lfmap-top{flex-direction:column;align-items:stretch}
+  .ig-slide img{height:300px}
+  .ig-slide figcaption{font-size:.9rem;padding:44px 18px 18px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo"><img src="assets/logo.png" alt="LiveFresh" /></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#model">The Model</a>
+      <a href="#online">Order Online</a>
+      <a href="#instore">In-Store</a>
+      <a href="#shop">Live Map</a>
+      <a href="#locations">Locations</a>
+    </nav>
+    <a href="https://shop.livefresh.ai" class="btn btn-green nav-cta">Shop Fresh →</a>
+    <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="top">
+  <div class="hero-videowrap">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg">
+      <source src="lf-hero.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="wrap hero-content">
+    <div class="hero-pill"><span class="dot"></span> Now delivering across Orange County, CA</div>
+    <h1>From the <span class="scriptword">farm</span>,<br/>straight to <span class="accent">you</span>.</h1>
+    <p class="lead">LiveFresh picks produce, proteins and greens at peak ripeness and brings them direct to your door — and to our neighborhood stores. No freezers. No middlemen. Just fresh.</p>
+    <div class="hero-cta">
+      <a href="https://shop.livefresh.ai" class="btn btn-gold">Shop the Live Map</a>
+      <a href="#online" class="btn btn-ghost">Online or In-Store?</a>
+    </div>
+    <div class="hero-tags">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Picked daily</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Never frozen</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Fresh you can afford</span>
+    </div>
+  </div>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 90" preserveAspectRatio="none"><path fill="#F4FAEF" d="M0,40 C360,90 720,0 1080,30 C1260,45 1380,60 1440,55 L1440,90 L0,90 Z"/></svg>
+  </div>
+</section>
+
+<!-- ===== MARQUEE ===== -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>Farm Fresh</span><span>No Freezers</span><span>Picked at Peak</span><span>Direct to You</span><span>Fruits</span><span>Vegetables</span><span>Proteins</span><span>Fresh Juices</span><span>Freshness that everyone can afford</span>
+    <span>Farm Fresh</span><span>No Freezers</span><span>Picked at Peak</span><span>Direct to You</span><span>Fruits</span><span>Vegetables</span><span>Proteins</span><span>Fresh Juices</span><span>Freshness that everyone can afford</span>
+  </div>
+</div>
+
+<!-- ===== THE MODEL / JOURNEY ===== -->
+<section class="journey section-pad" id="model">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><i data-lucide="leaf"></i> The LiveFresh Model</span>
+      <h2>From farm to you — nothing in between.</h2>
+      <p>Most produce travels through warehouses, distributors and cold storage before it reaches you. We cut the chain down to its freshest possible path.</p>
+    </div>
+
+    <div class="journey-track reveal">
+      <div class="journey-line"></div>
+      <div class="jstep">
+        <div class="jbubble"><i data-lucide="wheat"></i><span class="num">1</span></div>
+        <h3>The Farm</h3>
+        <p>We partner directly with growers and pick at peak ripeness — not weeks early for shipping.</p>
+      </div>
+      <div class="jstep">
+        <div class="jbubble"><i data-lucide="package"></i><span class="num">2</span></div>
+        <h3>The LiveFresh Hub</h3>
+        <p>Sorted, quality-checked and packed the same day. No long-term cold storage, no freezers.</p>
+      </div>
+      <div class="jstep">
+        <div class="jbubble"><i data-lucide="truck"></i><span class="num">3</span></div>
+        <h3>Direct Delivery</h3>
+        <p>Routed straight to your door or stocked at our neighborhood stores within the day.</p>
+      </div>
+      <div class="jstep">
+        <div class="jbubble"><i data-lucide="utensils"></i><span class="num">4</span></div>
+        <h3>Your Table</h3>
+        <p>Fresh fruits, vegetables and proteins arrive at their best — affordable, every time.</p>
+      </div>
+    </div>
+
+    <div class="no-middle reveal">
+      <span class="strike">Warehouses · Distributors · Cold storage · Markups</span>
+      <span class="yay">Just farm → fresh → you.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROCESS ===== -->
+<section class="process section-pad" id="process">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><i data-lucide="zap"></i> How It Works</span>
+      <h2>Fresh, made simple</h2>
+      <p>The same direct-to-customer model powers everything we do — online orders and in-store.</p>
+    </div>
+    <div class="proc-grid">
+      <div class="proc-card reveal"><span class="pnum">01</span><div class="picon"><i data-lucide="shopping-cart"></i></div><h3>Shop by category</h3><p>Browse Fruits, Vegetables and Proteins online or in store. Build a basket for your household — or your business.</p></div>
+      <div class="proc-card reveal"><span class="pnum">02</span><div class="picon"><i data-lucide="sunrise"></i></div><h3>We pick it fresh</h3><p>Orders trigger a same-day pick from our grower partners. Nothing sits in a freezer waiting for you.</p></div>
+      <div class="proc-card reveal"><span class="pnum">03</span><div class="picon"><i data-lucide="map-pin"></i></div><h3>Local, fast routes</h3><p>We deliver within a tight radius around Orange County, so produce travels hours — not days.</p></div>
+      <div class="proc-card reveal"><span class="pnum">04</span><div class="picon"><i data-lucide="heart"></i></div><h3>Fresh, for less</h3><p>Cutting out the middle layers means real freshness at a price that everyone can afford.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BUY: TWO WAYS ===== -->
+<section class="buy section-pad" id="buy">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><i data-lucide="shopping-bag"></i> Two ways to get fresh</span>
+      <h2>Order online, or walk right in.</h2>
+      <p>The LiveFresh model works both ways — fresh delivered direct to your door, or picked up and shopped at a neighborhood store. Same farm-fresh produce, your choice how.</p>
+    </div>
+    <div class="buy-grid">
+
+      <!-- Online / Direct to Consumer -->
+      <div class="buy-card online reveal" id="online">
+        <span class="buy-badge">Direct to Consumer</span>
+        <div class="buy-icon"><i data-lucide="truck"></i></div>
+        <h3>Order Online</h3>
+        <p class="blurb">Shop the live map, see real prices and freshness from every hub within 20 miles, and have it routed straight to your door — same day, never frozen.</p>
+        <ul class="buy-list">
+          <li>Live prices &amp; days-from-harvest on every item</li>
+          <li>Delivered from the nearest fulfillment hub or store</li>
+          <li>Standard or express delivery, in a 1-hour window</li>
+        </ul>
+        <div class="buy-chips"><span><i data-lucide="apple"></i> Fruits</span><span><i data-lucide="carrot"></i> Vegetables</span><span><i data-lucide="beef"></i> Proteins</span></div>
+        <a href="https://shop.livefresh.ai" class="btn btn-gold">Shop Online →</a>
+      </div>
+
+      <!-- In-Store -->
+      <div class="buy-card instore reveal" id="instore">
+        <span class="buy-badge">In Person</span>
+        <div class="buy-icon"><i data-lucide="store"></i></div>
+        <h3>Shop In-Store</h3>
+        <p class="blurb">Walk into a LiveFresh retail shop to browse the full fresh display, grab a cold-pressed juice, or place an order online and collect it free with in-store pickup.</p>
+        <ul class="buy-list">
+          <li>Browse fresh fruit, veg &amp; proteins in person</li>
+          <li>Free in-store pickup on online orders</li>
+          <li>Juice &amp; QSR bar — made fresh on the spot</li>
+        </ul>
+        <div class="buy-chips"><span><i data-lucide="shopping-basket"></i> Walk in</span><span><i data-lucide="package"></i> Free pickup</span><span><i data-lucide="cup-soda"></i> Juice bar</span></div>
+        <button type="button" class="btn btn-green" id="showInstore">Step Inside →</button>
+      </div>
+
+    </div>
+
+    <!-- In-store photo gallery (revealed when "Step Inside" is clicked) -->
+    <div class="instore-gallery" id="instoreGallery" aria-hidden="true">
+      <div class="ig-head">
+        <button class="ig-back" id="igBack" type="button"><i data-lucide="arrow-left"></i> Back to options</button>
+        <span class="ig-title">Step inside a LiveFresh store</span>
+      </div>
+      <div class="ig-carousel" id="igCarousel">
+        <div class="ig-track" id="igTrack">
+          <figure class="ig-slide">
+            <img src="assets/store-1.jpg" alt="LiveFresh storefront at dusk with patio seating and a grow-wall in the window" loading="lazy" />
+            <figcaption><strong>Eat well. Live well.</strong> A neighborhood storefront — patio seating, fresh produce up front, and a living grow-wall glowing in the window.</figcaption>
+          </figure>
+          <figure class="ig-slide">
+            <img src="assets/store-2.jpg" alt="Inside a LiveFresh store — living grow-wall, fresh produce and seafood, never frozen" loading="lazy" />
+            <figcaption><strong>Fresh food. Never frozen.</strong> A living grow-wall, daily produce, sustainable seafood, and a cold-pressed juice &amp; coffee bar.</figcaption>
+          </figure>
+          <figure class="ig-slide">
+            <img src="assets/store-3.jpg" alt="Kids learning how lettuce is grown in-store at LiveFresh" loading="lazy" />
+            <figcaption><strong>Grown right here</strong> We grow lettuce in-store and show how — from seed to harvest to your table.</figcaption>
+          </figure>
+        </div>
+        <button class="ig-arrow ig-prev" id="igPrev" type="button" aria-label="Previous photo"><i data-lucide="chevron-left"></i></button>
+        <button class="ig-arrow ig-next" id="igNext" type="button" aria-label="Next photo"><i data-lucide="chevron-right"></i></button>
+      </div>
+      <div class="ig-dots" id="igDots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LIVE MAP / SHOP TASTE ===== -->
+<section class="livemap section-pad" id="shop">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><i data-lucide="map"></i> Live Neighborhood Map</span>
+      <h2>See what's fresh near you — right now</h2>
+      <p>A taste of the LiveFresh shop: drop a pin anywhere in Orange County to reveal live prices, every hub and store within 20 miles, and what you can buy today.</p>
+    </div>
+    <div class="lfmap-card reveal">
+      <div class="lfmap-top">
+        <div class="lf-search">
+          <svg class="lf-search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="lf-search" type="text" placeholder="Enter a city, state, or ZIP code" autocomplete="off" />
+          <button id="lf-clear" aria-label="Clear" style="display:none">×</button>
+          <div id="lf-suggest" class="lf-suggest"></div>
+        </div>
+        <button class="lf-locate" id="lf-locate" type="button"><i data-lucide="locate-fixed"></i> Use my location</button>
+        <div class="lf-channels" id="lf-channels" role="tablist">
+          <button class="active" data-ch="all">All</button>
+          <button data-ch="retail"><i data-lucide="store"></i> LF Stores</button>
+          <button data-ch="fulfillment"><i data-lucide="truck"></i> Fulfillment</button>
+        </div>
+      </div>
+
+      <div class="lfmap-grid">
+        <div class="lfmap-left">
+          <div id="lf-map"></div>
+          <div class="lf-legend">
+            <span><i class="lf-dot" style="background:#E94F37"></i> You · drag to compare</span>
+            <span><i class="lf-dot" style="background:#3C9A3D"></i> LF Store</span>
+            <span><i class="lf-dot" style="background:#F5A623"></i> Fulfillment Hub</span>
+            <span><i class="lf-ring"></i> 20-mi radius</span>
+          </div>
+        </div>
+        <div class="lfmap-right">
+          <div class="lf-status" id="lf-status">Locating…</div>
+          <div class="lf-cats" id="lf-cats" role="tablist">
+            <button class="active" data-cat="fruits">Fruits</button>
+            <button data-cat="vegetables">Vegetables</button>
+            <button data-cat="proteins">Proteins</button>
+          </div>
+          <div class="lf-products" id="lf-products"></div>
+        </div>
+      </div>
+
+      <div class="lf-hubs" id="lf-hubs"></div>
+    </div>
+    <p class="map-hint">A live taste of the LiveFresh shop — drag the pin to compare your area, switch channels and categories. <a href="https://shop.livefresh.ai" target="_blank" rel="noopener">Open the full shop with basket &amp; checkout ↗</a></p>
+  </div>
+</section>
+
+<!-- ===== AUDIENCE ===== -->
+<section class="audience section-pad">
+  <div class="wrap">
+    <div class="section-head reveal" style="color:#fff">
+      <span class="eyebrow" style="background:rgba(255,255,255,.12);color:var(--lime-soft)"><i data-lucide="users"></i> Built for everyone</span>
+      <h2 style="color:#fff">One fresh supply, two ways to shop</h2>
+      <p style="color:rgba(255,255,255,.8)">Whether you're feeding a family or sourcing for your kitchen, LiveFresh delivers the same farm-direct freshness.</p>
+    </div>
+    <div class="aud-toggle reveal">
+      <button class="active" data-aud="home"><i data-lucide="house"></i> Household</button>
+      <button data-aud="biz"><i data-lucide="utensils-crossed"></i> Business</button>
+    </div>
+    <div class="aud-panel home active">
+      <div class="aud-item"><div class="ai"><i data-lucide="salad"></i></div><h4>Weekly fresh boxes</h4><p>Fruits, veg and proteins picked for the week and dropped at your door — skip the grocery run.</p></div>
+      <div class="aud-item"><div class="ai"><i data-lucide="piggy-bank"></i></div><h4>Honest pricing</h4><p>Farm-direct means freshness that fits a real family budget.</p></div>
+      <div class="aud-item"><div class="ai"><i data-lucide="shopping-basket"></i></div><h4>Build your basket</h4><p>Mix and match exactly what you need — no rigid bundles, no waste.</p></div>
+    </div>
+    <div class="aud-panel biz">
+      <div class="aud-item"><div class="ai"><i data-lucide="utensils"></i></div><h4>Restaurant-ready</h4><p>Reliable, same-day fresh supply for cafés, juice bars and kitchens.</p></div>
+      <div class="aud-item"><div class="ai"><i data-lucide="package"></i></div><h4>Standing orders</h4><p>Set a recurring fresh order and let us handle the routes and picking.</p></div>
+      <div class="aud-item"><div class="ai"><i data-lucide="handshake"></i></div><h4>Local partnership</h4><p>Source local, fresh produce that your customers can taste the difference in.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STORES (RENDERS) ===== -->
+<section class="stores section-pad" id="stores">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><i data-lucide="store"></i> Concept Store Renders</span>
+      <h2>Fresh, reimagined as a place</h2>
+      <p>Our neighborhood stores bring the farm-direct experience to life — part market, part juice bar, part learning space.</p>
+    </div>
+    <div class="store-grid">
+
+      <!-- Store render 1: Standalone Market -->
+      <div class="store-card reveal">
+        <div class="store-render">
+          <span class="store-tag">Flagship Market</span>
+          <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cde7f5"/><stop offset="1" stop-color="#eef9f0"/></linearGradient>
+            </defs>
+            <rect width="400" height="220" fill="url(#sky1)"/>
+            <circle cx="330" cy="44" r="22" fill="#FFE08A"/>
+            <rect x="40" y="60" width="320" height="150" fill="#0E3A1F"/>
+            <!-- awning -->
+            <g>
+              <rect x="34" y="92" width="332" height="18" fill="#F5A623"/>
+              <path d="M34 110 h332 v6 h-332 z" fill="#0A2A16"/>
+              <g fill="#8DC63F"><rect x="34" y="110" width="33" height="14"/><rect x="100" y="110" width="33" height="14"/><rect x="166" y="110" width="33" height="14"/><rect x="232" y="110" width="33" height="14"/><rect x="298" y="110" width="33" height="14"/></g>
+            </g>
+            <!-- sign -->
+            <text x="200" y="84" text-anchor="middle" font-family="Pacifico, cursive" font-size="26" fill="#F4FAEF">LiveFresh</text>
+            <!-- glass storefront -->
+            <rect x="60" y="124" width="120" height="86" fill="#bfe3ec" opacity=".85"/>
+            <rect x="222" y="124" width="120" height="86" fill="#bfe3ec" opacity=".85"/>
+            <rect x="186" y="124" width="30" height="86" fill="#123"/>
+            <line x1="120" y1="124" x2="120" y2="210" stroke="#0E3A1F" stroke-width="3"/>
+            <line x1="282" y1="124" x2="282" y2="210" stroke="#0E3A1F" stroke-width="3"/>
+            <!-- produce crates outside -->
+            <g>
+              <rect x="64" y="186" width="44" height="24" fill="#8a5a33"/><circle cx="74" cy="186" r="7" fill="#E94F37"/><circle cx="88" cy="184" r="7" fill="#F5A623"/><circle cx="100" cy="187" r="6" fill="#8DC63F"/>
+              <rect x="296" y="186" width="44" height="24" fill="#8a5a33"/><circle cx="306" cy="186" r="7" fill="#8DC63F"/><circle cx="320" cy="184" r="7" fill="#E94F37"/><circle cx="332" cy="187" r="6" fill="#F5A623"/>
+            </g>
+          </svg>
+        </div>
+        <div class="store-body">
+          <h3>The Flagship Market</h3>
+          <p>A standalone fresh market with room for packaging, storage and a full fruit-and-veg display — fresh produce front and center.</p>
+          <div class="store-feat"><span>1,000–2,000 sqft</span><span>Outdoor space</span><span>Full produce wall</span></div>
+        </div>
+      </div>
+
+      <!-- Store render 2: Juice & QSR Bar -->
+      <div class="store-card reveal">
+        <div class="store-render">
+          <span class="store-tag">Juice & QSR Bar</span>
+          <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="220" fill="#0E3A1F"/>
+            <!-- back wall menu -->
+            <rect x="40" y="26" width="320" height="120" rx="8" fill="#0A2A16" stroke="#1d5233" stroke-width="2"/>
+            <text x="60" y="56" font-family="Pacifico, cursive" font-size="20" fill="#A3D65C">Fresh Bar</text>
+            <g font-family="Poppins, sans-serif" font-size="9" fill="#cfe6c4">
+              <text x="62" y="80">Cold-Pressed Juice</text><text x="62" y="98">Smoothie Bowls</text><text x="62" y="116">Salads &amp; Wraps</text>
+              <text x="230" y="80">Avocado Toast</text><text x="230" y="98">Fresh Coffee</text><text x="230" y="116">Seasonal Specials</text>
+            </g>
+            <!-- pendant lights -->
+            <g stroke="#F5A623" stroke-width="2"><line x1="120" y1="26" x2="120" y2="6"/><line x1="280" y1="26" x2="280" y2="6"/></g>
+            <circle cx="120" cy="30" r="6" fill="#FFC233"/><circle cx="280" cy="30" r="6" fill="#FFC233"/>
+            <!-- counter -->
+            <rect x="30" y="150" width="340" height="50" rx="6" fill="#caa472"/>
+            <rect x="30" y="150" width="340" height="12" fill="#e0c293"/>
+            <!-- juice glasses on counter -->
+            <g>
+              <rect x="80" y="132" width="14" height="22" rx="2" fill="#E94F37"/><rect x="100" y="130" width="14" height="24" rx="2" fill="#F5A623"/><rect x="120" y="134" width="14" height="20" rx="2" fill="#8DC63F"/>
+              <rect x="280" y="132" width="14" height="22" rx="2" fill="#A3D65C"/><rect x="300" y="130" width="14" height="24" rx="2" fill="#E94F37"/>
+            </g>
+            <!-- stools -->
+            <g fill="#1d5233"><circle cx="110" cy="206" r="9"/><circle cx="200" cy="206" r="9"/><circle cx="290" cy="206" r="9"/></g>
+          </svg>
+        </div>
+        <div class="store-body">
+          <h3>The Juice & QSR Bar</h3>
+          <p>Fresh juices, smoothies, salads and avocado toast — made to order from the same produce we sell. Zero frozen, all fresh.</p>
+          <div class="store-feat"><span>Cold-pressed</span><span>Grab & go</span><span>Made fresh</span></div>
+        </div>
+      </div>
+
+      <!-- Store render 3: Mall Kiosk / Crystal Cove -->
+      <div class="store-card reveal">
+        <div class="store-render">
+          <span class="store-tag">Mall Concept · Crystal Cove</span>
+          <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3efe6"/><stop offset="1" stop-color="#ded5c4"/></linearGradient></defs>
+            <rect width="400" height="220" fill="#f7f4ec"/>
+            <rect y="170" width="400" height="50" fill="url(#floor)"/>
+            <!-- kiosk structure -->
+            <rect x="110" y="60" width="180" height="120" rx="6" fill="#0E3A1F"/>
+            <!-- roof -->
+            <path d="M96 60 L304 60 L286 40 L114 40 Z" fill="#8DC63F"/>
+            <rect x="96" y="58" width="208" height="8" fill="#F5A623"/>
+            <!-- sign -->
+            <text x="200" y="96" text-anchor="middle" font-family="Pacifico, cursive" font-size="22" fill="#F4FAEF">LiveFresh</text>
+            <text x="200" y="112" text-anchor="middle" font-family="Poppins, sans-serif" font-size="7" letter-spacing="1.5" fill="#A3D65C">FRESHNESS THAT EVERYONE CAN AFFORD</text>
+            <!-- open counter -->
+            <rect x="110" y="130" width="180" height="50" fill="#e0c293"/>
+            <rect x="110" y="130" width="180" height="10" fill="#caa472"/>
+            <!-- produce display tiers -->
+            <g>
+              <rect x="124" y="150" width="46" height="14" fill="#8a5a33"/><circle cx="132" cy="150" r="6" fill="#E94F37"/><circle cx="146" cy="148" r="6" fill="#F5A623"/><circle cx="160" cy="151" r="5" fill="#8DC63F"/>
+              <rect x="230" y="150" width="46" height="14" fill="#8a5a33"/><circle cx="238" cy="150" r="6" fill="#8DC63F"/><circle cx="252" cy="148" r="6" fill="#E94F37"/><circle cx="266" cy="151" r="5" fill="#F5A623"/>
+            </g>
+            <!-- plants -->
+            <g><rect x="86" y="150" width="12" height="20" fill="#caa472"/><circle cx="92" cy="146" r="12" fill="#3C9A3D"/>
+               <rect x="302" y="150" width="12" height="20" fill="#caa472"/><circle cx="308" cy="146" r="12" fill="#3C9A3D"/></g>
+          </svg>
+        </div>
+        <div class="store-body">
+          <h3>The Mall Concept</h3>
+          <p>A bright, high-traffic kiosk designed for premium centers like Crystal Cove — fresh displays, fast service and an open, welcoming feel.</p>
+          <div class="store-feat"><span>High foot traffic</span><span>Crystal Cove priority</span><span>Open display</span></div>
+        </div>
+      </div>
+
+    </div>
+    <p class="render-note">Concept renders for illustration — store designs in development.</p>
+  </div>
+</section>
+
+<!-- ===== ABOUT OUR STORES ===== -->
+<section class="about-stores section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><i data-lucide="sprout"></i> About Our Stores</span>
+      <h2>More than a store — a fresh experience</h2>
+      <p>Every LiveFresh location is built on three ideas.</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-card reveal"><div class="big"><i data-lucide="book-open"></i></div><h3>Learn</h3><p>An educational element in every store — the best-quality fruits and vegetables, how they're grown, and why fresh nutrition matters.</p></div>
+      <div class="about-card reveal"><div class="big"><i data-lucide="cup-soda"></i></div><h3>Taste</h3><p>A QSR experience: fresh juices, salads, smoothies and drinks made from the same produce on our shelves.</p></div>
+      <div class="about-card reveal"><div class="big"><i data-lucide="snowflake"></i></div><h3>Fresh, never frozen</h3><p>No frozen food or beverages — only fresh vegetables, fruits and proteins. It's the whole point.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LOCATIONS ===== -->
+<section class="locations section-pad" id="locations">
+  <div class="wrap">
+    <div class="section-head reveal" style="color:#fff">
+      <span class="eyebrow" style="background:rgba(255,255,255,.1);color:var(--lime-soft)"><i data-lucide="map-pin"></i> Where We Are</span>
+      <h2 style="color:#fff">Rooted in Orange County</h2>
+      <p style="color:rgba(255,255,255,.8)">We're opening neighborhood stores across OC's most vibrant communities — and delivering fresh within a short drive of each.</p>
+    </div>
+    <div class="loc-grid">
+      <div class="reveal">
+        <ul class="loc-list">
+          <li class="prio"><span class="pin"><i data-lucide="star"></i></span> Crystal Cove <span class="badge">PRIORITY</span></li>
+          <li><span class="pin"><i data-lucide="map-pin"></i></span> Newport Beach</li>
+          <li><span class="pin"><i data-lucide="map-pin"></i></span> Irvine</li>
+          <li><span class="pin"><i data-lucide="map-pin"></i></span> Laguna</li>
+          <li><span class="pin"><i data-lucide="map-pin"></i></span> Costa Mesa</li>
+        </ul>
+        <p class="loc-radius"><i data-lucide="truck"></i> Fresh delivery within a ~20-mile radius of each store</p>
+      </div>
+      <div class="loc-map reveal">
+        <svg viewBox="0 0 620 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of Orange County, California">
+          <defs>
+            <linearGradient id="ocLand" x1="0.1" y1="0" x2="0.5" y2="1">
+              <stop offset="0" stop-color="#3f9457"/>
+              <stop offset="0.55" stop-color="#2c6f44"/>
+              <stop offset="1" stop-color="#1c4f33"/>
+            </linearGradient>
+            <radialGradient id="ocGlow" cx="44%" cy="46%" r="58%">
+              <stop offset="0" stop-color="rgba(141,198,63,.42)"/>
+              <stop offset="1" stop-color="rgba(141,198,63,0)"/>
+            </radialGradient>
+            <filter id="ocShadow" x="-25%" y="-25%" width="150%" height="150%">
+              <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000" flood-opacity="0.5"/>
+            </filter>
+          </defs>
+
+          <!-- soft glow behind the county -->
+          <ellipse cx="300" cy="300" rx="280" ry="250" fill="url(#ocGlow)"/>
+
+          <!-- neighbour-county context (faint, like a real map) -->
+          <g font-family="'Poppins',sans-serif" font-weight="600" font-size="13" letter-spacing="1.2" fill="rgba(255,255,255,.26)">
+            <text x="60" y="52">LOS ANGELES</text>
+            <text x="330" y="26">SAN BERNARDINO</text>
+            <text x="600" y="208" text-anchor="end">RIVERSIDE</text>
+            <text x="600" y="470" text-anchor="end">SAN DIEGO</text>
+          </g>
+          <text x="70" y="470" font-family="'Poppins',sans-serif" font-style="italic" font-size="13" fill="rgba(141,198,63,.55)">Pacific Ocean</text>
+
+          <!-- Orange County silhouette -->
+          <path d="M54,248 L63,205 L100,171 L134,122 L145,74 L245,85 L302,63 L319,40 L410,131 L489,205 L549,256 L578,268 L575,319 L558,393 L484,455 L433,561 L370,507 L319,455 L290,424 L268,404 L196,367 L171,347 L125,310 L85,273 Z"
+                fill="url(#ocLand)" stroke="#A3D65C" stroke-width="2" stroke-linejoin="round" filter="url(#ocShadow)"/>
+          <!-- coastline accent on the SW edge -->
+          <path d="M433,561 L370,507 L319,455 L290,424 L268,404 L196,367 L171,347 L125,310 L85,273 L54,248"
+                fill="none" stroke="#FFD98A" stroke-width="2.5" stroke-opacity=".55" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- ~20-mile fresh-delivery radius around Crystal Cove -->
+          <circle cx="272" cy="402" r="150" fill="rgba(245,166,35,.05)" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="5 8" stroke-opacity=".7"/>
+
+          <!-- city markers -->
+          <g font-family="'Poppins',sans-serif" font-size="13.5" fill="#F4FAEF"
+             style="paint-order:stroke;stroke:#0A2A16;stroke-width:3.5px;stroke-linejoin:round">
+            <circle cx="302" cy="295" r="6" fill="#8DC63F" stroke="#fff" stroke-width="1.6"/>
+            <text x="314" y="300">Irvine</text>
+
+            <circle cx="160" cy="330" r="6" fill="#8DC63F" stroke="#fff" stroke-width="1.6"/>
+            <text x="150" y="326" text-anchor="end">Costa Mesa</text>
+
+            <circle cx="193" cy="372" r="6" fill="#8DC63F" stroke="#fff" stroke-width="1.6"/>
+            <text x="183" y="382" text-anchor="end">Newport Beach</text>
+
+            <circle cx="300" cy="430" r="6" fill="#8DC63F" stroke="#fff" stroke-width="1.6"/>
+            <text x="312" y="443">Laguna Beach</text>
+
+            <circle cx="272" cy="402" r="10" fill="#FFC233" stroke="#fff" stroke-width="2"/>
+            <circle cx="272" cy="402" r="3.5" fill="#0A2A16"/>
+            <text x="272" y="386" text-anchor="middle" font-weight="700">Crystal Cove</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta section-pad" id="cta">
+  <div class="wrap reveal">
+    <h2>Ready to live fresh?</h2>
+    <p>Freshness that everyone can afford — delivered to your door or waiting at our stores.</p>
+    <a href="#top" class="btn btn-green" style="font-size:1.1rem;padding:17px 36px">Start Shopping →</a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <img src="assets/logo.png" alt="LiveFresh" />
+        <p class="tag">Freshness that everyone can afford</p>
+      </div>
+      <div><h5>Shop</h5><ul><li><a href="#">Fruits</a></li><li><a href="#">Vegetables</a></li><li><a href="#">Proteins</a></li><li><a href="#">Shop All</a></li></ul></div>
+      <div><h5>Company</h5><ul><li><a href="#model">The Model</a></li><li><a href="#stores">Our Stores</a></li><li><a href="#locations">Locations</a></li></ul></div>
+      <div><h5>How to Buy</h5><ul><li><a href="https://shop.livefresh.ai">Shop Live Map</a></li><li><a href="#online">Order Online</a></li><li><a href="#instore">In-Store &amp; Pickup</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">© <span id="yr"></span> LiveFresh · Live Fresh Group — Orange County, CA · Concept site for internal review</div>
+  </div>
+</footer>
+
+<script>
+// nav scroll state
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('nav-scrolled',scrollY>30));
+// burger
+const burger=document.getElementById('burger'),links=document.getElementById('navLinks');
+burger.addEventListener('click',()=>links.classList.toggle('open'));
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+// audience toggle
+document.querySelectorAll('.aud-toggle button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.aud-toggle button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const t=b.dataset.aud;
+  document.querySelectorAll('.aud-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.aud-panel.'+t).classList.add('active');
+}));
+// reveal on scroll
+const io=new IntersectionObserver((e)=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// year
+document.getElementById('yr').textContent=new Date().getFullYear();
+
+// in-store reveal + photo carousel
+(function(){
+  const buy=document.getElementById('buy'), track=document.getElementById('igTrack');
+  if(!buy||!track) return;
+  const slides=[...track.children], dotsWrap=document.getElementById('igDots'), carousel=document.getElementById('igCarousel');
+  let idx=0, timer=null;
+  slides.forEach((_,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Go to photo '+(i+1));b.addEventListener('click',()=>{go(i);restart();});dotsWrap.appendChild(b);});
+  const dots=[...dotsWrap.children];
+  function render(){track.style.transform='translateX('+(-idx*100)+'%)';dots.forEach((d,i)=>d.classList.toggle('active',i===idx));}
+  function go(i){idx=(i+slides.length)%slides.length;render();}
+  function next(){go(idx+1);} function prev(){go(idx-1);}
+  function start(){stop();if(slides.length>1)timer=setInterval(next,4800);} function stop(){if(timer){clearInterval(timer);timer=null;}}
+  function restart(){start();}
+  document.getElementById('igNext').addEventListener('click',()=>{next();restart();});
+  document.getElementById('igPrev').addEventListener('click',()=>{prev();restart();});
+  carousel.addEventListener('mouseenter',stop); carousel.addEventListener('mouseleave',start);
+  document.getElementById('showInstore').addEventListener('click',()=>{
+    buy.classList.add('viewing-store');
+    document.getElementById('instoreGallery').setAttribute('aria-hidden','false');
+    idx=0; render(); start();
+    buy.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.getElementById('igBack').addEventListener('click',()=>{
+    buy.classList.remove('viewing-store');
+    document.getElementById('instoreGallery').setAttribute('aria-hidden','true');
+    stop();
+  });
+  render();
+})();
+</script>
+<!-- LiveFresh dataset (extracted from the shop) + native map module -->
+<script src="assets/livefresh-data.js"></script>
+<script src="assets/livefresh-map.js" defer></script>
+<!-- Lucide line icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>window.lucide&&lucide.createIcons();</script>
+</body>
+</html>
