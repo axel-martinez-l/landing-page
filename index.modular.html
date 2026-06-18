@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>LiveFresh — Freshness that everyone can afford</title>
-<meta name="description" content="LiveFresh brings produce straight from the farm to your door and to our stores. No freezers, no middlemen — just fresh." />
+<title>LiveFresh - Freshness that everyone can afford</title>
+<meta name="description" content="LiveFresh brings produce straight from the farm to your door and to our stores. No freezers, no middlemen - just fresh." />
 <link rel="icon" type="image/png" href="assets/icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -162,14 +162,41 @@ section{position:relative}
   background:var(--forest);color:#fff;font-family:'Poppins';font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center}
 .jstep h3{font-size:1.18rem;color:var(--forest);margin-bottom:8px;font-weight:600}
 .jstep p{font-size:.92rem;color:var(--muted)}
-.no-middle{
-  text-align:center;margin-top:54px;
-}
-.no-middle .strike{
-  display:inline-block;position:relative;font-family:'Fraunces',serif;font-size:1.5rem;color:var(--muted);font-weight:600;
-}
-.no-middle .strike::before{content:"";position:absolute;top:52%;left:-6px;right:-6px;height:3px;background:var(--tomato);transform:rotate(-3deg)}
-.no-middle .yay{display:block;margin-top:10px;font-family:'Fraunces',serif;font-size:1.8rem;color:var(--forest);font-weight:700}
+/* ---------- MARKUP CHAIN (problem -> LiveFresh) ---------- */
+.markup{margin-top:54px;background:var(--cream);border:1px solid #e7eede;border-radius:var(--radius);padding:34px 26px;box-shadow:0 18px 44px -30px rgba(14,58,31,.4)}
+.markup-head{text-align:center;max-width:700px;margin:0 auto 26px}
+.markup-tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--tomato);background:#fde7e3;padding:6px 14px;border-radius:100px;margin-bottom:12px}
+.markup-head h3{font-size:clamp(1.4rem,2.6vw,1.95rem);color:var(--forest);font-weight:600;margin-bottom:8px}
+.markup-head p{color:var(--muted);font-size:.98rem}
+.markup-chain{display:flex;align-items:flex-start;justify-content:center;overflow-x:auto;padding:6px 2px 6px}
+.mk-node{flex:0 0 auto;width:96px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.mk-ic{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #e0e7d8;color:var(--forest);box-shadow:0 8px 18px -12px rgba(14,58,31,.4)}
+.mk-ic svg{width:22px;height:22px}
+.mk-node.end .mk-ic{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.mk-price{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.04rem;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:3px}
+.mk-node.end .mk-price{color:var(--tomato);font-size:1.18rem}
+.mk-name{font-size:.78rem;font-weight:700;color:var(--forest-2);line-height:1.15}
+.mk-sub{font-size:.66rem;color:var(--muted)}
+.mk-link{flex:0 0 auto;width:46px;height:52px;position:relative;display:flex;align-items:center;justify-content:center}
+.mk-link::before{content:"";position:absolute;left:-3px;right:-3px;top:25px;height:2px;background:#cdd6c6}
+.mk-pct{position:relative;z-index:1;background:#fde7e3;color:#c0392b;font-size:.64rem;font-weight:800;padding:3px 6px;border-radius:100px;white-space:nowrap}
+.markup-solve{display:flex;align-items:stretch;justify-content:center;gap:16px;margin-top:30px;flex-wrap:wrap}
+.ms-card{flex:1 1 220px;max-width:300px;border-radius:16px;padding:22px 24px;text-align:center}
+.ms-card.today{background:#fff;border:1px solid #e7eede}
+.ms-card.lf{background:linear-gradient(150deg,var(--green),var(--forest));color:#fff;position:relative;box-shadow:0 18px 44px -18px rgba(60,154,61,.6)}
+.ms-label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.ms-card.today .ms-label{color:var(--muted)}
+.ms-card.lf .ms-label{color:var(--lime-soft)}
+.ms-price{display:block;font-family:'Poppins',sans-serif;font-weight:800;font-size:2.5rem;font-variant-numeric:tabular-nums;line-height:1}
+.ms-card.today .ms-price{color:var(--ink)}
+.ms-note{display:block;font-size:.82rem;margin-top:7px}
+.ms-card.today .ms-note{color:var(--muted)}
+.ms-card.lf .ms-note{color:rgba(255,255,255,.85)}
+.ms-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold-bright);color:var(--forest-deep);font-size:.74rem;font-weight:800;padding:5px 13px;border-radius:100px;white-space:nowrap;box-shadow:0 8px 18px -8px rgba(245,166,35,.7)}
+.ms-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--green);font-weight:700;font-size:.82rem;text-align:center}
+.ms-mid svg{width:26px;height:26px}
+.markup-foot{text-align:center;color:var(--muted);font-size:.96rem;margin-top:22px;max-width:680px;margin-left:auto;margin-right:auto}
+.markup-foot b{color:var(--forest)}
 
 /* ---------- PROCESS ---------- */
 .process{background:linear-gradient(180deg,var(--cream),#fff)}
@@ -508,7 +535,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
   <div class="wrap hero-content">
     <div class="hero-pill"><span class="dot"></span> Now delivering across Orange County, CA</div>
     <h1>From the <span class="scriptword">farm</span>,<br/>straight to <span class="accent">you</span>.</h1>
-    <p class="lead">LiveFresh picks produce, proteins and greens at peak ripeness and brings them direct to your door — and to our neighborhood stores. No freezers. No middlemen. Just fresh.</p>
+    <p class="lead">LiveFresh picks produce, proteins and greens at peak ripeness and brings them direct to your door - and to our neighborhood stores. No freezers. No middlemen. Just fresh.</p>
     <div class="hero-cta">
       <a href="https://shop.livefresh.ai" class="btn btn-gold">Shop the Live Map</a>
       <a href="#online" class="btn btn-ghost">Online or In-Store?</a>
@@ -537,7 +564,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
   <div class="wrap">
     <div class="section-head reveal">
       <span class="eyebrow"><i data-lucide="leaf"></i> The LiveFresh Model</span>
-      <h2>From farm to you — nothing in between.</h2>
+      <h2>From farm to you - nothing in between.</h2>
       <p>Most produce travels through warehouses, distributors and cold storage before it reaches you. We cut the chain down to its freshest possible path.</p>
     </div>
 
@@ -546,7 +573,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
       <div class="jstep">
         <div class="jbubble"><i data-lucide="wheat"></i><span class="num">1</span></div>
         <h3>The Farm</h3>
-        <p>We partner directly with growers and pick at peak ripeness — not weeks early for shipping.</p>
+        <p>We partner directly with growers and pick at peak ripeness - not weeks early for shipping.</p>
       </div>
       <div class="jstep">
         <div class="jbubble"><i data-lucide="package"></i><span class="num">2</span></div>
@@ -561,13 +588,44 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
       <div class="jstep">
         <div class="jbubble"><i data-lucide="utensils"></i><span class="num">4</span></div>
         <h3>Your Table</h3>
-        <p>Fresh fruits, vegetables and proteins arrive at their best — affordable, every time.</p>
+        <p>Fresh fruits, vegetables and proteins arrive at their best - affordable, every time.</p>
       </div>
     </div>
 
-    <div class="no-middle reveal">
-      <span class="strike">Warehouses · Distributors · Cold storage · Markups</span>
-      <span class="yay">Just farm → fresh → you.</span>
+    <div class="markup reveal">
+      <div class="markup-head">
+        <span class="markup-tag">How produce reaches you today</span>
+        <h3>Every hand in the chain adds a markup.</h3>
+        <p>By the time a 6 oz punnet of blueberries reaches your kitchen, it has passed through 5 middlemen - each one adding cost and losing freshness, with no one accountable for price or quality.</p>
+      </div>
+      <div class="markup-chain">
+        <div class="mk-node"><span class="mk-ic"><i data-lucide="tractor"></i></span><span class="mk-price">$1.16</span><span class="mk-name">Farms</span><span class="mk-sub">1.9M+ farms</span></div>
+        <div class="mk-link"><span class="mk-pct">+35%</span></div>
+        <div class="mk-node"><span class="mk-ic"><i data-lucide="package"></i></span><span class="mk-price">$1.57</span><span class="mk-name">Pack House</span><span class="mk-sub">7K+ operators</span></div>
+        <div class="mk-link"><span class="mk-pct">+40%</span></div>
+        <div class="mk-node"><span class="mk-ic"><i data-lucide="warehouse"></i></span><span class="mk-price">$2.19</span><span class="mk-name">Produce Markets</span><span class="mk-sub">12 wholesalers</span></div>
+        <div class="mk-link"><span class="mk-pct">+50%</span></div>
+        <div class="mk-node"><span class="mk-ic"><i data-lucide="handshake"></i></span><span class="mk-price">$3.29</span><span class="mk-name">Distributors</span><span class="mk-sub">15K+ traders</span></div>
+        <div class="mk-link"><span class="mk-pct">+60%</span></div>
+        <div class="mk-node"><span class="mk-ic"><i data-lucide="shopping-cart"></i></span><span class="mk-price">$5.26</span><span class="mk-name">Retail</span><span class="mk-sub">4M+ chains</span></div>
+        <div class="mk-link"><span class="mk-pct">+33%</span></div>
+        <div class="mk-node end"><span class="mk-ic"><i data-lucide="users"></i></span><span class="mk-price">$6.99</span><span class="mk-name">You</span><span class="mk-sub">retail price</span></div>
+      </div>
+      <div class="markup-solve">
+        <div class="ms-card today">
+          <span class="ms-label">Produce today</span>
+          <span class="ms-price">$6.99</span>
+          <span class="ms-note">5 middlemen · aging produce</span>
+        </div>
+        <div class="ms-mid"><i data-lucide="arrow-right"></i><span>LiveFresh cuts<br/>out the chain</span></div>
+        <div class="ms-card lf">
+          <span class="ms-badge">58% lower</span>
+          <span class="ms-label">With LiveFresh</span>
+          <span class="ms-price">$2.95</span>
+          <span class="ms-note">farm-direct · picked at peak</span>
+        </div>
+      </div>
+      <p class="markup-foot">One direct chain - farm-direct sourcing, regional hubs, delivered in hours. <b>The freshness and quality you deserve, without the markups.</b></p>
     </div>
   </div>
 </section>
@@ -578,12 +636,12 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
     <div class="section-head reveal">
       <span class="eyebrow"><i data-lucide="zap"></i> How It Works</span>
       <h2>Fresh, made simple</h2>
-      <p>The same direct-to-customer model powers everything we do — online orders and in-store.</p>
+      <p>The same direct-to-customer model powers everything we do - online orders and in-store.</p>
     </div>
     <div class="proc-grid">
-      <div class="proc-card reveal"><span class="pnum">01</span><div class="picon"><i data-lucide="shopping-cart"></i></div><h3>Shop by category</h3><p>Browse Fruits, Vegetables and Proteins online or in store. Build a basket for your household — or your business.</p></div>
+      <div class="proc-card reveal"><span class="pnum">01</span><div class="picon"><i data-lucide="shopping-cart"></i></div><h3>Shop by category</h3><p>Browse Fruits, Vegetables and Proteins online or in store. Build a basket for your household - or your business.</p></div>
       <div class="proc-card reveal"><span class="pnum">02</span><div class="picon"><i data-lucide="sunrise"></i></div><h3>We pick it fresh</h3><p>Orders trigger a same-day pick from our grower partners. Nothing sits in a freezer waiting for you.</p></div>
-      <div class="proc-card reveal"><span class="pnum">03</span><div class="picon"><i data-lucide="map-pin"></i></div><h3>Local, fast routes</h3><p>We deliver within a tight radius around Orange County, so produce travels hours — not days.</p></div>
+      <div class="proc-card reveal"><span class="pnum">03</span><div class="picon"><i data-lucide="map-pin"></i></div><h3>Local, fast routes</h3><p>We deliver within a tight radius around Orange County, so produce travels hours - not days.</p></div>
       <div class="proc-card reveal"><span class="pnum">04</span><div class="picon"><i data-lucide="heart"></i></div><h3>Fresh, for less</h3><p>Cutting out the middle layers means real freshness at a price that everyone can afford.</p></div>
     </div>
   </div>
@@ -595,7 +653,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
     <div class="section-head reveal">
       <span class="eyebrow"><i data-lucide="shopping-bag"></i> Two ways to get fresh</span>
       <h2>Order online, or walk right in.</h2>
-      <p>The LiveFresh model works both ways — fresh delivered direct to your door, or picked up and shopped at a neighborhood store. Same farm-fresh produce, your choice how.</p>
+      <p>The LiveFresh model works both ways - fresh delivered direct to your door, or picked up and shopped at a neighborhood store. Same farm-fresh produce, your choice how.</p>
     </div>
     <div class="buy-grid">
 
@@ -604,7 +662,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         <span class="buy-badge">Direct to Consumer</span>
         <div class="buy-icon"><i data-lucide="truck"></i></div>
         <h3>Order Online</h3>
-        <p class="blurb">Shop the live map, see real prices and freshness from every hub within 20 miles, and have it routed straight to your door — same day, never frozen.</p>
+        <p class="blurb">Shop the live map, see real prices and freshness from every hub within 20 miles, and have it routed straight to your door - same day, never frozen.</p>
         <ul class="buy-list">
           <li>Live prices &amp; days-from-harvest on every item</li>
           <li>Delivered from the nearest fulfillment hub or store</li>
@@ -623,7 +681,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         <ul class="buy-list">
           <li>Browse fresh fruit, veg &amp; proteins in person</li>
           <li>Free in-store pickup on online orders</li>
-          <li>Juice &amp; QSR bar — made fresh on the spot</li>
+          <li>Juice &amp; QSR bar - made fresh on the spot</li>
         </ul>
         <div class="buy-chips"><span><i data-lucide="shopping-basket"></i> Walk in</span><span><i data-lucide="package"></i> Free pickup</span><span><i data-lucide="cup-soda"></i> Juice bar</span></div>
         <button type="button" class="btn btn-green" id="showInstore">Step Inside →</button>
@@ -641,15 +699,15 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         <div class="ig-track" id="igTrack">
           <figure class="ig-slide">
             <img src="assets/store-1.jpg" alt="LiveFresh storefront at dusk with patio seating and a grow-wall in the window" loading="lazy" />
-            <figcaption><strong>Eat well. Live well.</strong> A neighborhood storefront — patio seating, fresh produce up front, and a living grow-wall glowing in the window.</figcaption>
+            <figcaption><strong>Eat well. Live well.</strong> A neighborhood storefront - patio seating, fresh produce up front, and a living grow-wall glowing in the window.</figcaption>
           </figure>
           <figure class="ig-slide">
-            <img src="assets/store-2.jpg" alt="Inside a LiveFresh store — living grow-wall, fresh produce and seafood, never frozen" loading="lazy" />
+            <img src="assets/store-2.jpg" alt="Inside a LiveFresh store - living grow-wall, fresh produce and seafood, never frozen" loading="lazy" />
             <figcaption><strong>Fresh food. Never frozen.</strong> A living grow-wall, daily produce, sustainable seafood, and a cold-pressed juice &amp; coffee bar.</figcaption>
           </figure>
           <figure class="ig-slide">
             <img src="assets/store-3.jpg" alt="Kids learning how lettuce is grown in-store at LiveFresh" loading="lazy" />
-            <figcaption><strong>Grown right here</strong> We grow lettuce in-store and show how — from seed to harvest to your table.</figcaption>
+            <figcaption><strong>Grown right here</strong> We grow lettuce in-store and show how - from seed to harvest to your table.</figcaption>
           </figure>
         </div>
         <button class="ig-arrow ig-prev" id="igPrev" type="button" aria-label="Previous photo"><i data-lucide="chevron-left"></i></button>
@@ -665,7 +723,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
   <div class="wrap">
     <div class="section-head reveal">
       <span class="eyebrow"><i data-lucide="map"></i> Live Neighborhood Map</span>
-      <h2>See what's fresh near you — right now</h2>
+      <h2>See what's fresh near you - right now</h2>
       <p>A taste of the LiveFresh shop: drop a pin anywhere in Orange County to reveal live prices, every hub and store within 20 miles, and what you can buy today.</p>
     </div>
     <div class="lfmap-card reveal">
@@ -707,7 +765,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
 
       <div class="lf-hubs" id="lf-hubs"></div>
     </div>
-    <p class="map-hint">A live taste of the LiveFresh shop — drag the pin to compare your area, switch channels and categories. <a href="https://shop.livefresh.ai" target="_blank" rel="noopener">Open the full shop with basket &amp; checkout ↗</a></p>
+    <p class="map-hint">A live taste of the LiveFresh shop - drag the pin to compare your area, switch channels and categories. <a href="https://shop.livefresh.ai" target="_blank" rel="noopener">Open the full shop with basket &amp; checkout ↗</a></p>
   </div>
 </section>
 
@@ -724,9 +782,9 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
       <button data-aud="biz"><i data-lucide="utensils-crossed"></i> Business</button>
     </div>
     <div class="aud-panel home active">
-      <div class="aud-item"><div class="ai"><i data-lucide="salad"></i></div><h4>Weekly fresh boxes</h4><p>Fruits, veg and proteins picked for the week and dropped at your door — skip the grocery run.</p></div>
+      <div class="aud-item"><div class="ai"><i data-lucide="salad"></i></div><h4>Weekly fresh boxes</h4><p>Fruits, veg and proteins picked for the week and dropped at your door - skip the grocery run.</p></div>
       <div class="aud-item"><div class="ai"><i data-lucide="piggy-bank"></i></div><h4>Honest pricing</h4><p>Farm-direct means freshness that fits a real family budget.</p></div>
-      <div class="aud-item"><div class="ai"><i data-lucide="shopping-basket"></i></div><h4>Build your basket</h4><p>Mix and match exactly what you need — no rigid bundles, no waste.</p></div>
+      <div class="aud-item"><div class="ai"><i data-lucide="shopping-basket"></i></div><h4>Build your basket</h4><p>Mix and match exactly what you need - no rigid bundles, no waste.</p></div>
     </div>
     <div class="aud-panel biz">
       <div class="aud-item"><div class="ai"><i data-lucide="utensils"></i></div><h4>Restaurant-ready</h4><p>Reliable, same-day fresh supply for cafés, juice bars and kitchens.</p></div>
@@ -742,7 +800,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
     <div class="section-head reveal">
       <span class="eyebrow"><i data-lucide="store"></i> Concept Store Renders</span>
       <h2>Fresh, reimagined as a place</h2>
-      <p>Our neighborhood stores bring the farm-direct experience to life — part market, part juice bar, part learning space.</p>
+      <p>Our neighborhood stores bring the farm-direct experience to life - part market, part juice bar, part learning space.</p>
     </div>
     <div class="store-grid">
 
@@ -780,7 +838,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         </div>
         <div class="store-body">
           <h3>The Flagship Market</h3>
-          <p>A standalone fresh market with room for packaging, storage and a full fruit-and-veg display — fresh produce front and center.</p>
+          <p>A standalone fresh market with room for packaging, storage and a full fruit-and-veg display - fresh produce front and center.</p>
           <div class="store-feat"><span>1,000–2,000 sqft</span><span>Outdoor space</span><span>Full produce wall</span></div>
         </div>
       </div>
@@ -815,7 +873,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         </div>
         <div class="store-body">
           <h3>The Juice & QSR Bar</h3>
-          <p>Fresh juices, smoothies, salads and avocado toast — made to order from the same produce we sell. Zero frozen, all fresh.</p>
+          <p>Fresh juices, smoothies, salads and avocado toast - made to order from the same produce we sell. Zero frozen, all fresh.</p>
           <div class="store-feat"><span>Cold-pressed</span><span>Grab & go</span><span>Made fresh</span></div>
         </div>
       </div>
@@ -851,13 +909,13 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         </div>
         <div class="store-body">
           <h3>The Mall Concept</h3>
-          <p>A bright, high-traffic kiosk designed for premium centers like Crystal Cove — fresh displays, fast service and an open, welcoming feel.</p>
+          <p>A bright, high-traffic kiosk designed for premium centers like Crystal Cove - fresh displays, fast service and an open, welcoming feel.</p>
           <div class="store-feat"><span>High foot traffic</span><span>Crystal Cove priority</span><span>Open display</span></div>
         </div>
       </div>
 
     </div>
-    <p class="render-note">Concept renders for illustration — store designs in development.</p>
+    <p class="render-note">Concept renders for illustration - store designs in development.</p>
   </div>
 </section>
 
@@ -866,13 +924,13 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
   <div class="wrap">
     <div class="section-head reveal">
       <span class="eyebrow"><i data-lucide="sprout"></i> About Our Stores</span>
-      <h2>More than a store — a fresh experience</h2>
+      <h2>More than a store - a fresh experience</h2>
       <p>Every LiveFresh location is built on three ideas.</p>
     </div>
     <div class="about-grid">
-      <div class="about-card reveal"><div class="big"><i data-lucide="book-open"></i></div><h3>Learn</h3><p>An educational element in every store — the best-quality fruits and vegetables, how they're grown, and why fresh nutrition matters.</p></div>
+      <div class="about-card reveal"><div class="big"><i data-lucide="book-open"></i></div><h3>Learn</h3><p>An educational element in every store - the best-quality fruits and vegetables, how they're grown, and why fresh nutrition matters.</p></div>
       <div class="about-card reveal"><div class="big"><i data-lucide="cup-soda"></i></div><h3>Taste</h3><p>A QSR experience: fresh juices, salads, smoothies and drinks made from the same produce on our shelves.</p></div>
-      <div class="about-card reveal"><div class="big"><i data-lucide="snowflake"></i></div><h3>Fresh, never frozen</h3><p>No frozen food or beverages — only fresh vegetables, fruits and proteins. It's the whole point.</p></div>
+      <div class="about-card reveal"><div class="big"><i data-lucide="snowflake"></i></div><h3>Fresh, never frozen</h3><p>No frozen food or beverages - only fresh vegetables, fruits and proteins. It's the whole point.</p></div>
     </div>
   </div>
 </section>
@@ -883,7 +941,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
     <div class="section-head reveal" style="color:#fff">
       <span class="eyebrow" style="background:rgba(255,255,255,.1);color:var(--lime-soft)"><i data-lucide="map-pin"></i> Where We Are</span>
       <h2 style="color:#fff">Rooted in Orange County</h2>
-      <p style="color:rgba(255,255,255,.8)">We're opening neighborhood stores across OC's most vibrant communities — and delivering fresh within a short drive of each.</p>
+      <p style="color:rgba(255,255,255,.8)">We're opening neighborhood stores across OC's most vibrant communities - and delivering fresh within a short drive of each.</p>
     </div>
     <div class="loc-grid">
       <div class="reveal">
@@ -964,7 +1022,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
 <section class="cta section-pad" id="cta">
   <div class="wrap reveal">
     <h2>Ready to live fresh?</h2>
-    <p>Freshness that everyone can afford — delivered to your door or waiting at our stores.</p>
+    <p>Freshness that everyone can afford - delivered to your door or waiting at our stores.</p>
     <a href="#top" class="btn btn-green" style="font-size:1.1rem;padding:17px 36px">Start Shopping →</a>
   </div>
 </section>
@@ -981,7 +1039,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
       <div><h5>Company</h5><ul><li><a href="#model">The Model</a></li><li><a href="#stores">Our Stores</a></li><li><a href="#locations">Locations</a></li></ul></div>
       <div><h5>How to Buy</h5><ul><li><a href="https://shop.livefresh.ai">Shop Live Map</a></li><li><a href="#online">Order Online</a></li><li><a href="#instore">In-Store &amp; Pickup</a></li></ul></div>
     </div>
-    <div class="foot-bottom">© <span id="yr"></span> LiveFresh · Live Fresh Group — Orange County, CA · Concept site for internal review</div>
+    <div class="foot-bottom">© <span id="yr"></span> LiveFresh · Live Fresh Group - Orange County, CA · Concept site for internal review</div>
   </div>
 </footer>
 

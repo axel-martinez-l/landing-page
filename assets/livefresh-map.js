@@ -1,5 +1,5 @@
 /* ============================================================
-   LiveFresh — native neighborhood map module
+   LiveFresh - native neighborhood map module
    Rebuilt from the shop dataset (window.LF_DATA):
      • 206 retail hubs  = LF Stores (Simon malls)  → in-store · pickup · delivery
      • 12 fulfillment hubs = Produce Markets        → D2C delivery / microfulfillment
@@ -22,7 +22,7 @@
 
   const STORE_COLOR = '#3C9A3D', HUB_COLOR = '#F5A623', YOU_COLOR = '#E94F37';
 
-  // ── State (default: Orange County / Irvine — LF's home market) ──
+  // ── State (default: Orange County / Irvine - LF's home market) ──
   let userLat = 33.6846, userLon = -117.8265, userArea = 'Irvine, CA';
   let activeChannel = 'all';   // all | retail | fulfillment
   let activeCat = 'fruits';
@@ -138,7 +138,7 @@
   function renderHubs() {
     const wrap = $('lf-hubs');
     if (!nearbyHubs.length) {
-      wrap.innerHTML = '<div class="lf-empty">No LiveFresh locations within ' + RADIUS_MI + ' miles here — try a major metro like Los Angeles, New York, or Chicago.</div>';
+      wrap.innerHTML = '<div class="lf-empty">No LiveFresh locations within ' + RADIUS_MI + ' miles here - try a major metro like Los Angeles, New York, or Chicago.</div>';
       return;
     }
     wrap.innerHTML = '<div class="lf-hubs-title">Nearest to you</div><div class="lf-hubs-row">' +
@@ -232,7 +232,7 @@
     if (rev) {
       revHtml = '<div class="lf-pop-rev"><div class="lf-pop-rev-head">' + STAR + ' ' + rev.rating.toFixed(1) +
         ' <span class="c">(' + rev.count.toLocaleString() + ' reviews)</span></div>' +
-        rev.samples.slice(0, 2).map(s => '<div class="lf-pop-rev-item">“' + s[1] + '” <span>— ' + s[0] + '</span></div>').join('') + '</div>';
+        rev.samples.slice(0, 2).map(s => '<div class="lf-pop-rev-item">“' + s[1] + '” <span>- ' + s[0] + '</span></div>').join('') + '</div>';
     }
     const tierMsg = (ft.t === 'just-in' ? ft.label : (f.days || 0) + ' day' + ((f.days === 1) ? '' : 's') + ' from harvest');
     popEl.innerHTML =
@@ -243,7 +243,7 @@
         '<div class="lf-step"><div class="lf-step-when">' + dayLabel(rdcDays) + ' · ' + rdcHour + ' · At the market</div><div class="lf-step-where">' + rdc + '</div><div class="lf-step-detail">Cold-chain transfer to the wholesale produce market</div></div>' +
         '<div class="lf-step current"><div class="lf-step-when">Today · ' + stocked + ' · Stocked here</div><div class="lf-step-where">' + (hubLabel ? hubLabel + ' · ' : '') + hubShort + '</div><div class="lf-step-detail">' + (bp ? 'Now ' + money(bp.price) + ' · ready for delivery or pickup' : 'ready for delivery or pickup') + '</div></div>' +
       '</div>' + revHtml +
-      '<div class="lf-pop-foot"><b>LiveFresh tracks each item end-to-end</b> — from the source farm to your door, we show you exactly where it came from.</div>';
+      '<div class="lf-pop-foot"><b>LiveFresh tracks each item end-to-end</b> - from the source farm to your door, we show you exactly where it came from.</div>';
     popEl.querySelector('.lf-pop-close').addEventListener('click', closeDetail);
     popOv.classList.add('open'); popEl.classList.add('open');
     // centre it
@@ -344,16 +344,16 @@
       if (t) openDetail(+t.dataset.pid);
     });
 
-    // "Use my location" — geolocation
+    // "Use my location" - geolocation
     const locate = $('lf-locate');
     if (locate) locate.addEventListener('click', () => {
-      if (!navigator.geolocation) { input.placeholder = 'Location not supported — type a city or ZIP'; return; }
+      if (!navigator.geolocation) { input.placeholder = 'Location not supported - type a city or ZIP'; return; }
       const label = locate.innerHTML;
       locate.classList.add('busy'); locate.textContent = 'Locating…';
       const done = () => { locate.classList.remove('busy'); locate.innerHTML = label; };
       navigator.geolocation.getCurrentPosition(
         pos => { dd.classList.remove('open'); input.value = ''; setUser(pos.coords.latitude, pos.coords.longitude, 'Your location', true); done(); },
-        ()  => { done(); input.placeholder = 'Couldn’t get location — type a city or ZIP'; },
+        ()  => { done(); input.placeholder = 'Couldn’t get location - type a city or ZIP'; },
         { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
       );
     });
