@@ -258,7 +258,7 @@ section{position:relative}
 
 /* ---------- LOCATIONS ---------- */
 .locations{background:var(--forest-deep);color:#fff}
-.loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.loc-grid{display:grid;grid-template-columns:1fr;gap:50px;align-items:center;max-width:880px;margin:0 auto}
 .loc-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:24px}
 .loc-list li{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
   padding:16px 20px;border-radius:14px;font-weight:500;transition:.25s}
@@ -267,7 +267,10 @@ section{position:relative}
 .loc-list li.prio{background:linear-gradient(135deg,rgba(245,166,35,.22),rgba(141,198,63,.12));border-color:rgba(245,166,35,.4)}
 .loc-list li .badge{margin-left:auto;font-size:.7rem;font-weight:700;background:var(--gold-bright);color:var(--forest-deep);padding:4px 10px;border-radius:100px;letter-spacing:.05em}
 .loc-map{position:relative}
-.loc-map svg{width:100%;height:auto;filter:drop-shadow(0 20px 40px rgba(0,0,0,.4))}
+.loc-map::before{content:"";position:absolute;inset:-8%;background:radial-gradient(closest-side,rgba(141,198,63,.30),rgba(141,198,63,0) 72%);z-index:0;pointer-events:none}
+#oc-map{position:relative;z-index:1;width:100%;height:560px;background:transparent;border-radius:22px}
+.loc-map .leaflet-container{background:transparent;outline:none}
+@media(max-width:768px){#oc-map{height:400px}}
 .loc-radius{font-size:.9rem;color:rgba(255,255,255,.7);margin-top:18px;text-align:center}
 
 /* ---------- CTA ---------- */
@@ -839,7 +842,7 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         <div class="store-body">
           <h3>The Flagship Market</h3>
           <p>A standalone fresh market with room for packaging, storage and a full fruit-and-veg display - fresh produce front and center.</p>
-          <div class="store-feat"><span>1,000–2,000 sqft</span><span>Outdoor space</span><span>Full produce wall</span></div>
+          <div class="store-feat"><span>Outdoor space</span><span>Full produce wall</span></div>
         </div>
       </div>
 
@@ -878,10 +881,10 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         </div>
       </div>
 
-      <!-- Store render 3: Mall Kiosk / Crystal Cove -->
+      <!-- Store render 3: Mall Kiosk -->
       <div class="store-card reveal">
         <div class="store-render">
-          <span class="store-tag">Mall Concept · Crystal Cove</span>
+          <span class="store-tag">Mall Concept</span>
           <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
             <defs><linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3efe6"/><stop offset="1" stop-color="#ded5c4"/></linearGradient></defs>
             <rect width="400" height="220" fill="#f7f4ec"/>
@@ -909,8 +912,8 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         </div>
         <div class="store-body">
           <h3>The Mall Concept</h3>
-          <p>A bright, high-traffic kiosk designed for premium centers like Crystal Cove - fresh displays, fast service and an open, welcoming feel.</p>
-          <div class="store-feat"><span>High foot traffic</span><span>Crystal Cove priority</span><span>Open display</span></div>
+          <p>A bright kiosk designed for commercial hubs with strong foot traffic - fresh displays, fast service and an open, welcoming feel.</p>
+          <div class="store-feat"><span>High foot traffic</span><span>Commercial hubs</span><span>Open display</span></div>
         </div>
       </div>
 
@@ -944,75 +947,8 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
       <p style="color:rgba(255,255,255,.8)">We're opening neighborhood stores across OC's most vibrant communities - and delivering fresh within a short drive of each.</p>
     </div>
     <div class="loc-grid">
-      <div class="reveal">
-        <ul class="loc-list">
-          <li class="prio"><span class="pin"><i data-lucide="star"></i></span> Crystal Cove <span class="badge">PRIORITY</span></li>
-          <li><span class="pin"><i data-lucide="map-pin"></i></span> Newport Beach</li>
-          <li><span class="pin"><i data-lucide="map-pin"></i></span> Irvine</li>
-          <li><span class="pin"><i data-lucide="map-pin"></i></span> Laguna</li>
-          <li><span class="pin"><i data-lucide="map-pin"></i></span> Costa Mesa</li>
-        </ul>
-        <p class="loc-radius"><i data-lucide="truck"></i> Fresh delivery within a ~20-mile radius of each store</p>
-      </div>
       <div class="loc-map reveal">
-        <svg viewBox="0 0 620 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of Orange County, California">
-          <defs>
-            <linearGradient id="ocLand" x1="0.1" y1="0" x2="0.5" y2="1">
-              <stop offset="0" stop-color="#3f9457"/>
-              <stop offset="0.55" stop-color="#2c6f44"/>
-              <stop offset="1" stop-color="#1c4f33"/>
-            </linearGradient>
-            <radialGradient id="ocGlow" cx="44%" cy="46%" r="58%">
-              <stop offset="0" stop-color="rgba(141,198,63,.42)"/>
-              <stop offset="1" stop-color="rgba(141,198,63,0)"/>
-            </radialGradient>
-            <filter id="ocShadow" x="-25%" y="-25%" width="150%" height="150%">
-              <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000" flood-opacity="0.5"/>
-            </filter>
-          </defs>
-
-          <!-- soft glow behind the county -->
-          <ellipse cx="300" cy="300" rx="280" ry="250" fill="url(#ocGlow)"/>
-
-          <!-- neighbour-county context (faint, like a real map) -->
-          <g font-family="'Poppins',sans-serif" font-weight="600" font-size="13" letter-spacing="1.2" fill="rgba(255,255,255,.26)">
-            <text x="60" y="52">LOS ANGELES</text>
-            <text x="330" y="26">SAN BERNARDINO</text>
-            <text x="600" y="208" text-anchor="end">RIVERSIDE</text>
-            <text x="600" y="470" text-anchor="end">SAN DIEGO</text>
-          </g>
-          <text x="70" y="470" font-family="'Poppins',sans-serif" font-style="italic" font-size="13" fill="rgba(141,198,63,.55)">Pacific Ocean</text>
-
-          <!-- Orange County silhouette -->
-          <path d="M54,248 L63,205 L100,171 L134,122 L145,74 L245,85 L302,63 L319,40 L410,131 L489,205 L549,256 L578,268 L575,319 L558,393 L484,455 L433,561 L370,507 L319,455 L290,424 L268,404 L196,367 L171,347 L125,310 L85,273 Z"
-                class="oc-land" fill="url(#ocLand)" stroke="#A3D65C" stroke-width="2" stroke-linejoin="round" filter="url(#ocShadow)"/>
-          <!-- coastline accent on the SW edge -->
-          <path d="M433,561 L370,507 L319,455 L290,424 L268,404 L196,367 L171,347 L125,310 L85,273 L54,248"
-                class="oc-coast" fill="none" stroke="#FFD98A" stroke-width="2.5" stroke-opacity=".55" stroke-linecap="round" stroke-linejoin="round"/>
-
-          <!-- ~20-mile fresh-delivery radius around Crystal Cove -->
-          <circle class="oc-radius" cx="272" cy="402" r="150" fill="rgba(245,166,35,.05)" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="5 8" stroke-opacity=".7"/>
-
-          <!-- city markers -->
-          <g class="oc-pins" font-family="'Poppins',sans-serif" font-size="13.5" fill="#F4FAEF"
-             style="paint-order:stroke;stroke:#0A2A16;stroke-width:3.5px;stroke-linejoin:round">
-            <circle cx="302" cy="295" r="6" fill="#8DC63F" stroke="#fff" stroke-width="1.6"/>
-            <text x="314" y="300">Irvine</text>
-
-            <circle cx="160" cy="330" r="6" fill="#8DC63F" stroke="#fff" stroke-width="1.6"/>
-            <text x="150" y="326" text-anchor="end">Costa Mesa</text>
-
-            <circle cx="193" cy="372" r="6" fill="#8DC63F" stroke="#fff" stroke-width="1.6"/>
-            <text x="183" y="382" text-anchor="end">Newport Beach</text>
-
-            <circle cx="300" cy="430" r="6" fill="#8DC63F" stroke="#fff" stroke-width="1.6"/>
-            <text x="312" y="443">Laguna Beach</text>
-
-            <circle cx="272" cy="402" r="10" fill="#FFC233" stroke="#fff" stroke-width="2"/>
-            <circle cx="272" cy="402" r="3.5" fill="#0A2A16"/>
-            <text x="272" y="386" text-anchor="middle" font-weight="700">Crystal Cove</text>
-          </g>
-        </svg>
+        <div id="oc-map" role="img" aria-label="Map of Orange County, California"></div>
       </div>
     </div>
   </div>
@@ -1098,6 +1034,53 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 <!-- LiveFresh dataset (extracted from the shop) + native map module -->
 <script src="assets/livefresh-data.js"></script>
 <script src="assets/livefresh-map.js" defer></script>
+<!-- Orange County map (Leaflet, brand-colored, no tiles / no API key) -->
+<script src="assets/oc-geo.js"></script>
+<script src="assets/oc-cities.js"></script>
+<script>
+(function(){
+  var el=document.getElementById('oc-map');
+  if(!el||!window.L||!window.OC_GEO) return;
+  var map=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,
+    doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,tap:false,
+    zoomAnimation:false,fadeAnimation:false,markerZoomAnimation:false});
+  // 1) county fill (gradient applied below)  2) city division lines  3) crisp outer outline
+  var fill=L.geoJSON(window.OC_GEO,{style:{className:'oc-fill',stroke:false,fillColor:'#2f7d46',fillOpacity:1}}).addTo(map);
+  if(window.OC_CITIES){
+    L.geoJSON(window.OC_CITIES,{style:{className:'oc-div',fill:false,color:'#bfe88a',weight:1,opacity:.40,lineJoin:'round'}}).addTo(map);
+  }
+  L.geoJSON(window.OC_GEO,{style:{className:'oc-outline',fill:false,color:'#A3D65C',weight:2.5,opacity:.95,lineJoin:'round'}}).addTo(map);
+  var ns='http://www.w3.org/2000/svg', clipEl=null;
+  // gradient fill + clip the city division lines to the county shape (drop offshore/out-of-county bits)
+  function decorate(){
+    var svgEl=el.querySelector('.leaflet-overlay-pane svg'); if(!svgEl) return;
+    var fp=svgEl.querySelector('path.oc-fill'); if(!fp) return;
+    var defs=svgEl.querySelector('defs');
+    if(!defs){
+      defs=document.createElementNS(ns,'defs');
+      defs.innerHTML='<linearGradient id="ocFill" x1="0" y1="0" x2="0.4" y2="1">'+
+        '<stop offset="0" stop-color="#3f9457"/><stop offset="0.55" stop-color="#2c6f44"/>'+
+        '<stop offset="1" stop-color="#1c4f33"/></linearGradient>';
+      svgEl.insertBefore(defs,svgEl.firstChild);
+      svgEl.querySelectorAll('path.oc-fill').forEach(function(p){ p.setAttribute('fill','url(#ocFill)'); });
+    }
+    if(!clipEl){
+      var cp=document.createElementNS(ns,'clipPath');
+      cp.setAttribute('id','ocClip'); cp.setAttribute('clipPathUnits','userSpaceOnUse');
+      clipEl=document.createElementNS(ns,'path'); cp.appendChild(clipEl); defs.appendChild(cp);
+      // move all division lines into ONE clipped group (cheap: one clip op, not 34)
+      var rootG=svgEl.querySelector('g'), divG=document.createElementNS(ns,'g');
+      divG.setAttribute('clip-path','url(#ocClip)'); rootG.appendChild(divG);
+      svgEl.querySelectorAll('path.oc-div').forEach(function(p){ divG.appendChild(p); });
+    }
+    clipEl.setAttribute('d', fp.getAttribute('d'));   // keep clip aligned with the (reprojected) county
+  }
+  function fit(){ map.fitBounds(fill.getBounds(),{padding:[24,24]}); decorate(); }
+  fit();
+  window.addEventListener('resize',fit);
+  window.__ocMap=map;
+})();
+</script>
 <!-- Lucide line icons -->
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>window.lucide&&lucide.createIcons();</script>
@@ -1166,22 +1149,22 @@ document.getElementById('yr').textContent=new Date().getFullYear();
     onView(jt,function(){jtl.play();},.3);
   })();
 
-  /* OC map draw-on */
+  /* OC map (Leaflet polygon) draw-on */
   (function(){
     var lm=document.querySelector('.loc-map'); if(!lm) return;
     lm.classList.remove('reveal'); lm.style.opacity='1'; if(reduce) return;
-    var land=svg.createDrawable('.loc-map .oc-land');
-    var coast=svg.createDrawable('.loc-map .oc-coast');
-    utils.set('.loc-map .oc-land',{fillOpacity:0});
-    utils.set('.loc-map .oc-pins circle',{opacity:0,translateY:-10});
-    utils.set('.loc-map .oc-radius',{opacity:0});
-    var mtl=createTimeline({defaults:{ease:'out(3)'},autoplay:false})
-      .add(land,{draw:['0 0','0 1'],duration:1500,ease:'inOut(3)'},0)
-      .add('.loc-map .oc-land',{fillOpacity:[0,1],duration:1000},350)
-      .add(coast,{draw:['0 0','0 1'],duration:1000},700)
-      .add('.loc-map .oc-radius',{opacity:[0,.7],duration:700},1150)
-      .add('.loc-map .oc-pins circle',{opacity:1,translateY:0,duration:550,ease:'out(4)',delay:stagger(110)},1250);
-    onView(lm,function(){mtl.play();},.3);
+    function run(){
+      var outline=lm.querySelectorAll('path.oc-outline'),
+          fill=lm.querySelectorAll('path.oc-fill'),
+          divs=lm.querySelectorAll('path.oc-div');
+      if(!outline.length){ return setTimeout(run,150); }   // wait for Leaflet to render
+      utils.set(fill,{opacity:0}); utils.set(divs,{opacity:0});
+      var tl=createTimeline({defaults:{ease:'inOut(3)'}});
+      outline.forEach(function(p){ tl.add(svg.createDrawable(p),{draw:['0 0','0 1'],duration:1500},0); });
+      tl.add(fill,{opacity:[0,1],duration:900},300);
+      tl.add(divs,{opacity:[0,1],duration:900,delay:stagger(15)},650);
+    }
+    onView(lm,run,.3);
   })();
 })();
 </script>
