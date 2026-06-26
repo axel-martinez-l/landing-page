@@ -241,7 +241,7 @@
       '<div class="lf-timeline">' +
         '<div class="lf-step"><div class="lf-step-when">' + dayLabel(f.days) + ' · Picked</div><div class="lf-step-where">' + (f.origin || p.source) + '</div><div class="lf-step-detail">Harvested at the source farm</div></div>' +
         '<div class="lf-step"><div class="lf-step-when">' + dayLabel(rdcDays) + ' · ' + rdcHour + ' · At the market</div><div class="lf-step-where">' + rdc + '</div><div class="lf-step-detail">Cold-chain transfer to the wholesale produce market</div></div>' +
-        '<div class="lf-step current"><div class="lf-step-when">Today · ' + stocked + ' · Stocked here</div><div class="lf-step-where">' + (hubLabel ? hubLabel + ' · ' : '') + hubShort + '</div><div class="lf-step-detail">' + (bp ? 'Now ' + money(bp.price) + ' · ready for delivery or pickup' : 'ready for delivery or pickup') + '</div></div>' +
+        '<div class="lf-step current"><div class="lf-step-when">Today · ' + stocked + ' · Stocked here</div><div class="lf-step-where">' + ((bp && bp.hub.type === 'retail') ? hubShort : (hubLabel ? hubLabel + ' · ' + hubShort : hubShort)) + '</div><div class="lf-step-detail">' + (bp ? 'Now ' + money(bp.price) + ' · ready for delivery or pickup' : 'ready for delivery or pickup') + '</div></div>' +
       '</div>' + revHtml +
       '<div class="lf-pop-foot"><b>LiveFresh tracks each item end-to-end</b> - from the source farm to your door, we show you exactly where it came from.</div>';
     popEl.querySelector('.lf-pop-close').addEventListener('click', closeDetail);
