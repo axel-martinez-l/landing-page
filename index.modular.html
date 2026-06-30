@@ -170,9 +170,9 @@ section{position:relative}
 .markup-head p{color:var(--muted);font-size:.98rem}
 .markup-chain{display:flex;align-items:flex-start;justify-content:center;overflow-x:auto;padding:6px 2px 6px}
 .mk-node{flex:0 0 auto;width:96px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
-.mk-ic{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #e0e7d8;color:var(--forest);box-shadow:0 8px 18px -12px rgba(14,58,31,.4)}
-.mk-ic svg{width:22px;height:22px}
-.mk-node.end .mk-ic{background:var(--tomato);border-color:var(--tomato);color:#fff}
+.mk-ic{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid var(--forest);overflow:hidden;box-shadow:0 8px 18px -12px rgba(14,58,31,.4)}
+.mk-ic img{width:100%;height:100%;object-fit:cover;display:block}
+.mk-node.end .mk-ic{border-color:var(--tomato);box-shadow:0 8px 18px -10px rgba(233,79,55,.55)}
 .mk-price{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.04rem;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:3px}
 .mk-node.end .mk-price{color:var(--tomato);font-size:1.18rem}
 .mk-name{font-size:.78rem;font-weight:700;color:var(--forest-2);line-height:1.15}
@@ -602,17 +602,17 @@ svg.lucide{stroke-width:1.9;flex:0 0 auto}
         <p>By the time a 6 oz punnet of blueberries reaches your kitchen, it has passed through 5 middlemen - each one adding cost and losing freshness, with no one accountable for price or quality.</p>
       </div>
       <div class="markup-chain">
-        <div class="mk-node"><span class="mk-ic"><i data-lucide="tractor"></i></span><span class="mk-price">$1.16</span><span class="mk-name">Farms</span><span class="mk-sub">1.9M+ farms</span></div>
+        <div class="mk-node"><span class="mk-ic"><img src="assets/Blueberries.jpg" alt="6 oz punnet of blueberries" /></span><span class="mk-price">$1.16</span><span class="mk-name">Farms</span><span class="mk-sub">1.9M+ farms</span></div>
         <div class="mk-link"><span class="mk-pct">+35%</span></div>
-        <div class="mk-node"><span class="mk-ic"><i data-lucide="package"></i></span><span class="mk-price">$1.57</span><span class="mk-name">Pack House</span><span class="mk-sub">7K+ operators</span></div>
+        <div class="mk-node"><span class="mk-ic"><img src="assets/Blueberries.jpg" alt="6 oz punnet of blueberries" /></span><span class="mk-price">$1.57</span><span class="mk-name">Pack House</span><span class="mk-sub">7K+ operators</span></div>
         <div class="mk-link"><span class="mk-pct">+40%</span></div>
-        <div class="mk-node"><span class="mk-ic"><i data-lucide="warehouse"></i></span><span class="mk-price">$2.19</span><span class="mk-name">Produce Markets</span><span class="mk-sub">12 wholesalers</span></div>
+        <div class="mk-node"><span class="mk-ic"><img src="assets/Blueberries.jpg" alt="6 oz punnet of blueberries" /></span><span class="mk-price">$2.19</span><span class="mk-name">Produce Markets</span><span class="mk-sub">12 wholesalers</span></div>
         <div class="mk-link"><span class="mk-pct">+50%</span></div>
-        <div class="mk-node"><span class="mk-ic"><i data-lucide="handshake"></i></span><span class="mk-price">$3.29</span><span class="mk-name">Distributors</span><span class="mk-sub">15K+ traders</span></div>
+        <div class="mk-node"><span class="mk-ic"><img src="assets/Blueberries.jpg" alt="6 oz punnet of blueberries" /></span><span class="mk-price">$3.29</span><span class="mk-name">Distributors</span><span class="mk-sub">15K+ traders</span></div>
         <div class="mk-link"><span class="mk-pct">+60%</span></div>
-        <div class="mk-node"><span class="mk-ic"><i data-lucide="shopping-cart"></i></span><span class="mk-price">$5.26</span><span class="mk-name">Retail</span><span class="mk-sub">4M+ chains</span></div>
+        <div class="mk-node"><span class="mk-ic"><img src="assets/Blueberries.jpg" alt="6 oz punnet of blueberries" /></span><span class="mk-price">$5.26</span><span class="mk-name">Retail</span><span class="mk-sub">4M+ chains</span></div>
         <div class="mk-link"><span class="mk-pct">+33%</span></div>
-        <div class="mk-node end"><span class="mk-ic"><i data-lucide="users"></i></span><span class="mk-price">$6.99</span><span class="mk-name">You</span><span class="mk-sub">retail price</span></div>
+        <div class="mk-node end"><span class="mk-ic"><img src="assets/Blueberries.jpg" alt="6 oz punnet of blueberries" /></span><span class="mk-price">$6.99</span><span class="mk-name">You</span><span class="mk-sub">retail price</span></div>
       </div>
       <div class="markup-solve">
         <div class="ms-card today">
